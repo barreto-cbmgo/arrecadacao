@@ -1,996 +1,420 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard de Arrecadação - CBMGO</title>
-    <style>
-        /* Estilos CSS permanecem os mesmos */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-            color: #252525;
-        }
-        .dashboard {
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-            background-color: #164979;
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-        }
-        .header h1 {
-            margin: 0;
-        }
-        /* --- Estilos das Abas --- */
-        .tab-container {
-            margin-bottom: 20px;
-            border-bottom: 2px solid #164979;
-            display: flex;
-        }
-        .tab-button {
-            padding: 10px 20px;
-            cursor: pointer;
-            background-color: #e0e0e0;
-            border: none;
-            border-bottom: none;
-            border-radius: 5px 5px 0 0;
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            margin-right: 5px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .tab-button:hover {
-            background-color: #d0d0d0;
-        }
-        .tab-button.active {
-            background-color: #164979;
-            color: white;
-        }
-        .tab-content {
-            display: none; /* Esconde por padrão */
-            animation: fadeIn 0.5s;
-        }
-        .tab-content.active {
-            display: block; /* Mostra a aba ativa */
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        /* --- Fim Estilos das Abas --- */
-
-        .summary-cards {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            gap: 15px;
-        }
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            flex: 1;
-            text-align: center;
-        }
-        .card-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #666;
-        }
-        .card-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #164979;
-            margin-bottom: 5px;
-        }
-        .section {
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #333;
-            text-align: center;
-        }
-        .pie-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-        }
-        .pie-chart {
-            flex: 1;
-            height: 320px;
-        }
-        .table-container {
-            max-height: 600px; /* Ajuste conforme necessário */
-            overflow-y: auto;
-            margin-top: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 8px 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #164979;
-            color: white;
-            position: sticky;
-            top: 0;
-            z-index: 1; /* Garante que o header fique sobre o conteúdo ao rolar */
-        }
-        .growth-positive {
-            color: #28a745;
-        }
-        .growth-negative {
-            color: #dc3545;
-        }
-        .bar-container {
-            height: 400px;
-            margin-bottom: 20px;
-        }
-        .chart-row {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        .chart-container {
-            flex: 1;
-            min-height: 350px;
-        }
-        .filter-section {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap; /* Adicionado para melhor responsividade */
-        }
-        .filter-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        select {
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            background-color: white;
-        }
-        .location-chart {
-            height: 300px;
-        }
-        button {
-            background-color: #164979;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #0d3457;
-        }
-        .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        /* --- Estilos da Aba de Comparação OBM --- */
-        .obm-comparison-controls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap; /* Permite que os itens quebrem linha */
-        }
-        #obmAddDropdown {
-            min-width: 250px; /* Largura mínima para o dropdown */
-        }
-        #selectedOBMListContainer {
-             margin-top: 15px; /* Adiciona espaço acima */
-        }
-        #selectedOBMList {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 5px; /* Espaço entre o título e a lista */
-            padding: 10px;
-            border: 1px solid #eee;
-            background-color: #f9f9f9;
-            border-radius: 4px;
-            min-height: 30px; /* Altura mínima para visualização */
-        }
-        .selected-obm-item {
-            background-color: #e0e0e0;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .remove-obm-btn {
-            background-color: #aaa;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            width: 18px;
-            height: 18px;
-            font-size: 12px;
-            line-height: 16px; /* Ajuste para centralizar o 'x' */
-            text-align: center;
-            padding: 0;
-            font-weight: bold;
-        }
-        .remove-obm-btn:hover {
-            background-color: #888;
-        }
-        .obm-comparison-chart-container {
-            min-height: 450px; /* Altura mínima para o gráfico de comparação */
-        }
-        /* --- Fim Estilos Comparação OBM --- */
-        @media (max-width: 768px) {
-            .summary-cards, .pie-container, .chart-row {
-                flex-direction: column;
-            }
-            .card, .pie-chart, .chart-container {
-                width: 100%;
-            }
-            .filter-section, .obm-comparison-controls {
-                flex-direction: column;
-                align-items: flex-start; /* Alinha itens à esquerda na coluna */
-            }
-            #obmAddDropdown {
-                 width: 100%; /* Ocupa toda a largura em telas pequenas */
-            }
-        }
-    </style>
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
     <div class="dashboard">
-        <div class="header">
-            <h1>Dashboard de Arrecadação - Corpo de Bombeiros Militar do Estado de Goiás</h1>
-            <p>Valores de arrecadação no serviço de vistoria (2022-2024)</p>
+      <div class="header">
+        <h1>
+          Dashboard de Arrecadação - Corpo de Bombeiros Militar do Estado de
+          Goiás
+        </h1>
+        <p>Valores de arrecadação no serviço de vistoria (2022-2024)</p>
+      </div>
+
+      <!-- Contêiner das Abas (MODIFICADO) -->
+      <div class="tab-container">
+        <button
+          class="tab-button active"
+          onclick="openTab(event, 'visaoGeral')"
+        >
+          Visão Geral
+        </button>
+        <button class="tab-button" onclick="openTab(event, 'detalhamentoOBM')">
+          Detalhamento OBM
+        </button>
+        <!-- NOVA ABA -->
+        <button class="tab-button" onclick="openTab(event, 'compararOBMs')">
+          Comparar OBMs
+        </button>
+        <button class="tab-button" onclick="openTab(event, 'rankingsAnalises')">
+          Rankings e Análises
+        </button>
+      </div>
+
+      <!-- Conteúdo da Aba Visão Geral (MODIFICADO - Tabela removida) -->
+      <div id="visaoGeral" class="tab-content active">
+        <!-- Resumo da Arrecadação por Ano -->
+        <div class="summary-cards">
+          <!-- Cards permanecem aqui -->
+          <div class="card">
+            <div class="card-title">Arrecadação Total 2022</div>
+            <div class="card-value" id="total2022">R$ 51.182.273,35</div>
+            <div class="card-subtitle">Base de comparação</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Arrecadação Total 2023</div>
+            <div class="card-value" id="total2023">R$ 32.495.850,18</div>
+            <div class="card-subtitle growth-negative">
+              -36,51% em relação a 2022
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Arrecadação Total 2024</div>
+            <div class="card-value" id="total2024">R$ 34.252.753,25</div>
+            <div class="card-subtitle growth-positive">
+              +5,41% em relação a 2023
+            </div>
+          </div>
         </div>
 
-        <!-- Contêiner das Abas (MODIFICADO) -->
-        <div class="tab-container">
-            <button class="tab-button active" onclick="openTab(event, 'visaoGeral')">Visão Geral</button>
-            <button class="tab-button" onclick="openTab(event, 'detalhamentoOBM')">Detalhamento OBM</button> <!-- NOVA ABA -->
-            <button class="tab-button" onclick="openTab(event, 'compararOBMs')">Comparar OBMs</button>
+        <!-- Comparação Entre Anos por Serviço -->
+        <div class="section">
+          <!-- Gráficos de barras por serviço permanecem aqui -->
+          <div class="section-title">Comparação Entre Anos por Serviço</div>
+          <div class="chart-row">
+            <div class="chart-container">
+              <canvas id="projetosYearlyChart"></canvas>
+            </div>
+            <div class="chart-container">
+              <canvas id="vistoriasYearlyChart"></canvas>
+            </div>
+            <div class="chart-container">
+              <canvas id="credenciamentoYearlyChart"></canvas>
+            </div>
+          </div>
         </div>
 
-        <!-- Conteúdo da Aba Visão Geral (MODIFICADO - Tabela removida) -->
-        <div id="visaoGeral" class="tab-content active">
-            <!-- Resumo da Arrecadação por Ano -->
-            <div class="summary-cards">
-                <!-- Cards permanecem aqui -->
-                <div class="card">
-                    <div class="card-title">Arrecadação Total 2022</div>
-                    <div class="card-value" id="total2022">R$ 51.182.273,35</div>
-                    <div class="card-subtitle">Base de comparação</div>
-                </div>
-                <div class="card">
-                    <div class="card-title">Arrecadação Total 2023</div>
-                    <div class="card-value" id="total2023">R$ 32.495.850,18</div>
-                    <div class="card-subtitle growth-negative">-36,51% em relação a 2022</div>
-                </div>
-                <div class="card">
-                    <div class="card-title">Arrecadação Total 2024</div>
-                    <div class="card-value" id="total2024">R$ 34.252.753,25</div>
-                    <div class="card-subtitle growth-positive">+5,41% em relação a 2023</div>
-                </div>
+        <!-- Gráficos de Pizza por Serviço -->
+        <div class="section">
+          <!-- Gráficos de pizza anuais permanecem aqui -->
+          <div class="section-title">
+            Distribuição da Arrecadação por Tipo de Serviço
+          </div>
+          <div class="pie-container">
+            <div class="pie-chart">
+              <canvas id="pieChart2022"></canvas>
             </div>
-
-            <!-- Comparação Entre Anos por Serviço -->
-            <div class="section">
-                <!-- Gráficos de barras por serviço permanecem aqui -->
-                <div class="section-title">Comparação Entre Anos por Serviço</div>
-                <div class="chart-row">
-                    <div class="chart-container">
-                        <canvas id="projetosYearlyChart"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="vistoriasYearlyChart"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="credenciamentoYearlyChart"></canvas>
-                    </div>
-                </div>
+            <div class="pie-chart">
+              <canvas id="pieChart2023"></canvas>
             </div>
-
-            <!-- Gráficos de Pizza por Serviço -->
-            <div class="section">
-                 <!-- Gráficos de pizza anuais permanecem aqui -->
-                <div class="section-title">Distribuição da Arrecadação por Tipo de Serviço</div>
-                <div class="pie-container">
-                    <div class="pie-chart">
-                        <canvas id="pieChart2022"></canvas>
-                    </div>
-                    <div class="pie-chart">
-                        <canvas id="pieChart2023"></canvas>
-                    </div>
-                    <div class="pie-chart">
-                        <canvas id="pieChart2024"></canvas>
-                    </div>
-                </div>
+            <div class="pie-chart">
+              <canvas id="pieChart2024"></canvas>
             </div>
+          </div>
+        </div>
 
-            <!-- Gráficos de Pizza para Distribuição Goiânia vs Interior por serviço -->
-            <div class="section">
-                <!-- Gráficos de pizza Gyn/Int permanecem aqui -->
-                <div class="section-title">Distribuição Goiânia vs Interior por Tipo de Serviço</div>
-                <div class="pie-container">
-                    <div class="pie-chart">
-                        <canvas id="pieChartVistorias"></canvas>
-                    </div>
-                    <div class="pie-chart">
-                        <canvas id="pieChartProjetos"></canvas>
-                    </div>
-                    <div class="pie-chart">
-                        <canvas id="pieChartCredenciamento"></canvas>
-                    </div>
-                </div>
+        <!-- Gráficos de Pizza para Distribuição Goiânia vs Interior por serviço -->
+        <div class="section">
+          <!-- Gráficos de pizza Gyn/Int permanecem aqui -->
+          <div class="section-title">
+            Distribuição Goiânia vs Interior por Tipo de Serviço
+          </div>
+          <div class="pie-container">
+            <div class="pie-chart">
+              <canvas id="pieChartVistorias"></canvas>
             </div>
-
-            <!-- Gráficos de Comparação -->
-            <div class="section">
-                 <!-- Gráficos de linha/barra Gyn/Int e Evolução permanecem aqui -->
-                <div class="section-title">Comparativos de Arrecadação</div>
-                <div class="chart-row">
-                    <div class="chart-container">
-                        <canvas id="locationChart"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="yearlyComparisonChart"></canvas>
-                    </div>
-                </div>
+            <div class="pie-chart">
+              <canvas id="pieChartProjetos"></canvas>
             </div>
-
-            <!-- SEÇÃO DA TABELA FOI MOVIDA -->
-
-        </div> <!-- Fim da Aba Visão Geral -->
-
-        <!-- Conteúdo da Nova Aba Detalhamento OBM (NOVO) -->
-        <div id="detalhamentoOBM" class="tab-content">
-             <!-- Tabela Detalhada de OBMs com filtros de ano para comparação -->
-            <div class="section">
-                <div class="section-title">Detalhamento por OBM</div>
-                <div class="filter-section">
-                    <div class="filter-group">
-                        <label for="yearInitial">Ano Inicial:</label>
-                        <select id="yearInitial">
-                            <option value="2022">2022</option>
-                            <option value="2023">2023</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="yearFinal">Ano Final:</label>
-                        <select id="yearFinal">
-                            <option value="2023">2023</option>
-                            <option value="2024" selected>2024</option>
-                        </select>
-                    </div>
-                    <!-- O botão de atualizar (se existisse) ou outros controles da tabela viriam aqui -->
-                </div>
-                <div class="table-container">
-                    <table id="detailedTable">
-                        <thead>
-                            <tr>
-                                <th>OBM</th>
-                                <th>2022 (R$)</th>
-                                <th>2023 (R$)</th>
-                                <th>2024 (R$)</th>
-                                <th id="variationHeader">Variação 2022-2024</th> <!-- O texto será atualizado via JS -->
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Preenchido via JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
+            <div class="pie-chart">
+              <canvas id="pieChartCredenciamento"></canvas>
             </div>
-        </div> <!-- Fim da Aba Detalhamento OBM -->
+          </div>
+        </div>
 
-        <!-- Conteúdo da Aba Comparar OBMs (Permanece o mesmo da resposta anterior) -->
-        <div id="compararOBMs" class="tab-content">
-            <div class="section">
-                <div class="section-title">Comparativo de Arrecadação entre OBMs</div>
-
-                <div class="obm-comparison-controls">
-                    <label for="obmAddDropdown"><strong>Adicionar OBM à comparação:</strong></label>
-                    <select id="obmAddDropdown">
-                        <option value="" disabled selected>Selecione para adicionar...</option>
-                        <!-- Opções serão adicionadas via JavaScript -->
-                    </select>
-                </div>
-
-                <div id="selectedOBMListContainer" style="display: none;"> <!-- Começa escondido -->
-                     <p><strong>OBMs em comparação:</strong></p>
-                     <div id="selectedOBMList">
-                         <!-- Lista de OBMs selecionadas será exibida aqui -->
-                     </div>
-                </div>
-
-                <div class="obm-comparison-chart-container">
-                    <canvas id="obmComparisonChart"></canvas>
-                </div>
-                 <p id="obmComparisonMessage" style="text-align: center; margin-top: 15px;">Selecione uma OBM no menu acima para começar a comparar.</p>
+        <!-- Gráficos de Comparação -->
+        <div class="section">
+          <!-- Gráficos de linha/barra Gyn/Int e Evolução permanecem aqui -->
+          <div class="section-title">Comparativos de Arrecadação</div>
+          <div class="chart-row">
+            <div class="chart-container">
+              <canvas id="locationChart"></canvas>
             </div>
-        </div> <!-- Fim da Aba Comparar OBMs -->
+            <div class="chart-container">
+              <canvas id="yearlyComparisonChart"></canvas>
+            </div>
+          </div>
+        </div>
 
+        <!-- SEÇÃO DA TABELA FOI MOVIDA -->
+      </div>
+      <!-- Fim da Aba Visão Geral -->
+
+      <!-- Conteúdo da Nova Aba Detalhamento OBM (NOVO) -->
+      <div id="detalhamentoOBM" class="tab-content">
+        <!-- Tabela Detalhada de OBMs com filtros de ano para comparação -->
+        <div class="section">
+          <div class="section-title">Detalhamento por OBM</div>
+          <div class="filter-section">
+            <div class="filter-group">
+              <label for="yearInitial">Ano Inicial:</label>
+              <select id="yearInitial">
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="yearFinal">Ano Final:</label>
+              <select id="yearFinal">
+                <option value="2023">2023</option>
+                <option value="2024" selected>2024</option>
+              </select>
+            </div>
+            <!-- O botão de atualizar (se existisse) ou outros controles da tabela viriam aqui -->
+          </div>
+          <div class="table-container">
+            <table id="detailedTable">
+              <thead>
+                <tr>
+                  <th>OBM</th>
+                  <th>2022 (R$)</th>
+                  <th>2023 (R$)</th>
+                  <th>2024 (R$)</th>
+                  <th id="variationHeader">Variação 2022-2024</th>
+                  <!-- O texto será atualizado via JS -->
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Preenchido via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- Fim da Aba Detalhamento OBM -->
+
+      <!-- Conteúdo da Aba Comparar OBMs (Permanece o mesmo da resposta anterior) -->
+      <div id="compararOBMs" class="tab-content">
+        <div class="section">
+          <div class="section-title">Comparativo de Arrecadação entre OBMs</div>
+
+          <div class="obm-comparison-controls">
+            <label for="obmAddDropdown"
+              ><strong>Adicionar OBM à comparação:</strong></label
+            >
+            <select id="obmAddDropdown">
+              <option value="" disabled selected>
+                Selecione para adicionar...
+              </option>
+              <!-- Opções serão adicionadas via JavaScript -->
+            </select>
+          </div>
+
+          <div id="selectedOBMListContainer" style="display: none">
+            <!-- Começa escondido -->
+            <p><strong>OBMs em comparação:</strong></p>
+            <div id="selectedOBMList">
+              <!-- Lista de OBMs selecionadas será exibida aqui -->
+            </div>
+          </div>
+
+          <div class="obm-comparison-chart-container">
+            <canvas id="obmComparisonChart"></canvas>
+          </div>
+          <p
+            id="obmComparisonMessage"
+            style="text-align: center; margin-top: 15px"
+          >
+            Selecione uma OBM no menu acima para começar a comparar.
+          </p>
+        </div>
+      </div>
+      <!-- Fim da Aba Comparar OBMs -->
+
+      <!-- Conteúdo da Aba Rankings e Análises -->
+      <div id="rankingsAnalises" class="tab-content">
+        <!-- Seção de Rankings de OBMs -->
+        <div class="section">
+          <div class="section-title">Rankings de OBMs</div>
+          
+          <!-- Controles de filtro para a seção de rankings -->
+          <div class="filter-section">
+            <div class="filter-group">
+              <label for="rankingType">Tipo de Ranking:</label>
+              <select id="rankingType">
+                <option value="arrecadacao">Arrecadação Total</option>
+                <option value="crescimentoPercentual">Crescimento Percentual</option>
+                <option value="crescimentoNominal">Crescimento Nominal</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="rankingYearInitial">Ano Inicial:</label>
+              <select id="rankingYearInitial">
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="rankingYearFinal">Ano Final:</label>
+              <select id="rankingYearFinal">
+                <option value="2023">2023</option>
+                <option value="2024" selected>2024</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="rankings-container">
+            <div class="chart-row rankings-charts-row">
+              <div class="chart-container rankings-chart">
+                <div class="sub-section-title">Top 10 OBMs</div>
+                <canvas id="topOBMsChart"></canvas>
+              </div>
+              <div class="chart-container rankings-chart">
+                <div class="sub-section-title">Bottom 10 OBMs</div>
+                <canvas id="bottomOBMsChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Seção de Contribuição para o Total -->
+        <div class="section">
+          <div class="section-title">Contribuição para o Total</div>
+          
+          <!-- Controles de filtro para a seção de contribuição -->
+          <div class="filter-section contribution-filter">
+            <div class="filter-group">
+              <label for="contributionYear">Ano:</label>
+              <select id="contributionYear">
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024" selected>2024</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="contribuicao-container">
+            <div class="chart-container contribution-chart-container">
+              <canvas id="contributionChart"></canvas>
+            </div>
+            <div class="contribution-summary" id="contributionSummary">
+              <!-- Resumo textual será adicionado aqui via JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Seção de Performance Relativa à Média -->
+        <div class="section">
+          <div class="section-title">Performance Relativa à Média</div>
+          
+          <!-- Controles de filtro para a seção de performance relativa -->
+          <div class="filter-section performance-filter">
+            <div class="filter-group">
+              <label for="performanceYear">Ano:</label>
+              <select id="performanceYear">
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024" selected>2024</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="performanceView">Visualização:</label>
+              <select id="performanceView">
+                <option value="top20">Top 20 OBMs</option>
+                <option value="all">Todas as OBMs</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="performance-container">
+            <div class="performance-chart-container">
+              <canvas id="performanceChart"></canvas>
+            </div>
+            <div class="performance-summary" id="performanceSummary">
+              <!-- Resumo textual será adicionado aqui via JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Seção de Análise de Quadrantes -->
+        <div class="section">
+          <div class="section-title">Análise de Quadrantes</div>
+          
+          <!-- Explicação do quadrante logo abaixo do título -->
+          <div class="quadrantes-explicacao">
+            <div class="explicacao-texto">
+              <p>O gráfico de quadrantes posiciona cada OBM com base em sua arrecadação absoluta (eixo X) e crescimento percentual (eixo Y), comparados com a média geral. As linhas divisórias representam as médias, criando quatro perfis estratégicos:</p>
+            </div>
+            <div class="explicacao-quadrantes">
+              <div class="explicacao-quadrante q1">
+                <span class="numero-quadrante">Q1</span>
+                <span class="nome-quadrante">Estrelas</span>
+                <span class="desc-quadrante">Alta Arrecadação / Alto Crescimento</span>
+              </div>
+              <div class="explicacao-quadrante q2">
+                <span class="numero-quadrante">Q2</span>
+                <span class="nome-quadrante">Emergentes</span>
+                <span class="desc-quadrante">Baixa Arrecadação / Alto Crescimento</span>
+              </div>
+              <div class="explicacao-quadrante q3">
+                <span class="numero-quadrante">Q3</span>
+                <span class="nome-quadrante">Atenção</span>
+                <span class="desc-quadrante">Baixa Arrecadação / Baixo Crescimento</span>
+              </div>
+              <div class="explicacao-quadrante q4">
+                <span class="numero-quadrante">Q4</span>
+                <span class="nome-quadrante">Estabelecidas</span>
+                <span class="desc-quadrante">Alta Arrecadação / Baixo Crescimento</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Filtros para a análise de quadrantes -->
+          <div class="filter-section quadrantes-filter">
+            <div class="filter-group">
+              <div class="label-with-tooltip">
+                <label for="quadranteAnoX">Ano (Arrecadação Absoluta):</label>
+                <div class="info-tooltip">
+                  <span class="tooltip-icon">?</span>
+                  <span class="tooltip-text">Define o ano de referência para o valor da arrecadação absoluta, representado no eixo horizontal (X) do gráfico.</span>
+                </div>
+              </div>
+              <select id="quadranteAnoX">
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024" selected>2024</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <div class="label-with-tooltip">
+                <label for="quadrantePeriodoY">Período (Crescimento %):</label>
+                <div class="info-tooltip">
+                  <span class="tooltip-icon">?</span>
+                  <span class="tooltip-text">Define o período para calcular o percentual de crescimento da arrecadação, representado no eixo vertical (Y) do gráfico.</span>
+                </div>
+              </div>
+              <select id="quadrantePeriodoY">
+                <option value="2022-2023">2022-2023</option>
+                <option value="2023-2024" selected>2023-2024</option>
+                <option value="2022-2024">2022-2024</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="quadrantes-container">
+            <div class="quadrantes-chart-container">
+              <canvas id="quadrantesChart"></canvas>
+            </div>
+            <div class="quadrantes-controls">
+              <div class="zoom-instructions">
+                <div class="instruction-title">Controles de Zoom e Navegação:</div>
+                <div class="instruction-item">
+                  <span class="instruction-icon">🖱️</span> Use a roda do mouse para aplicar zoom
+                </div>
+                <div class="instruction-item">
+                  <span class="instruction-icon">👆</span> Arraste para mover o gráfico
+                </div>
+                <div class="instruction-item">
+                  <span class="instruction-icon">↺</span> <button id="resetZoomBtn" class="zoom-btn">Resetar Zoom</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Fim da Aba Rankings e Análises -->
     </div>
 
-    <!-- Carregando a biblioteca Chart.js -->
+    <!-- Carregando a biblioteca Chart.js e plugins -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
-
-    <script>
-        // Registrar o plugin ChartDataLabels globalmente
-        Chart.register(ChartDataLabels);
-
-        // Dados de arrecadação (mesmo objeto 'data')
-        const data = {
-    "por_organizacao": [
-        {
-            "ano": 2022,
-            "dados": [
-                { "obm": "10ª CIBM - POSSE", "valor": 176419.48 },
-                { "obm": "10º BBM - CATALÃO", "valor": 710369.04 },
-                { "obm": "11ª CIBM - URUAÇU", "valor": 358577.75 },
-                { "obm": "11º BBM - PORANGATU", "valor": 180898.47 },
-                { "obm": "12ª CIBM - MORRINHOS", "valor": 280585.53 },
-                { "obm": "12º BBM - CIDADE DE GOIÁS", "valor": 205731.03 },
-                { "obm": "13ª CIBM - IPORÁ", "valor": 214241.86 },
-                { "obm": "13º BBM - JATAÍ", "valor": 24092298.59 },
-                { "obm": "14ª CIBM - PIRES DO RIO", "valor": 115832.16 },
-                { "obm": "14º BBM - SENADOR CANEDO", "valor": 385582.28 },
-                { "obm": "15ª CIBM - QUIRINÓPOLIS", "valor": 303311.93 },
-                { "obm": "15º BBM - TRINDADE", "valor": 374004.56 },
-                { "obm": "16ª CIBM - GOIATUBA", "valor": 212418.37 },
-                { "obm": "16º BBM - MINEIROS", "valor": 416206.67 },
-                { "obm": "17ª CIBM - ITABERAÍ", "valor": 234087.14 },
-                { "obm": "17º BBM - PIRENÓPOLIS", "valor": 344559.59 },
-                { "obm": "18ª CIBM - CERES", "valor": 288100.55 },
-                { "obm": "18º BBM - GOIANÉSIA", "valor": 283176.95 },
-                { "obm": "19ª CIBM - SÃO LUÍS M. BELOS", "valor": 157995.50 },
-                { "obm": "19º BBM - FORMOSA", "valor": 628511.48 },
-                { "obm": "1ª CIBM - MINAÇU", "valor": 78088.87 },
-                { "obm": "1º PBM - ARUANÃ", "valor": 105652.57 },
-                { "obm": "20ª CIBM - GOIANIRA", "valor": 126477.52 },
-                { "obm": "20º BBM-ÁGUAS LINDAS DE GOIÁS", "valor": 481461.74 },
-                { "obm": "21ª CIBM - NERÓPOLIS", "valor": 221987.24 },
-                { "obm": "22ª CIBM - S. M. DO ARAGUAIA", "valor": 113483.23 },
-                { "obm": "22º BBM - JARAGUÁ", "valor": 184798.38 },
-                { "obm": "23ª CIBM - IPAMERI", "valor": 159240.46 },
-                { "obm": "25ª CIBM - BELA VISTA DE GOIÁS", "valor": 127772.47 },
-                { "obm": "26ª CIBM - VALPARAÍSO DE GOIÁS", "valor": 604700.32 },
-                { "obm": "2º PBM - SILVÂNIA", "valor": 183793.47 },
-                { "obm": "3ª CIBM - SANTA HELENA", "valor": 294224.15 },
-                { "obm": "3º BBM - ANÁPOLIS", "valor": 1674414.14 },
-                { "obm": "3º PBM STO. A. DO DESCOBERTO", "valor": 61542.02 },
-                { "obm": "4º BBM - RIO VERDE", "valor": 1801654.91 },
-                { "obm": "4º PBM - CAMPOS BELOS", "valor": 98289.30 },
-                { "obm": "5ª CIBM - PALMEIRAS DE GOIÁS", "valor": 224065.67 },
-                { "obm": "5º BBM - LUZIÂNIA", "valor": 685400.87 },
-                { "obm": "6ª CIBM - NIQUELÂNDIA", "valor": 168759.38 },
-                { "obm": "6º BBM - ITUMBIARA", "valor": 958348.18 },
-                { "obm": "7ª CIBM - INHUMAS", "valor": 235509.69 },
-                { "obm": "7º BBM - APARECIDA DE GOIÂNIA", "valor": 2123487.68 },
-                { "obm": "8ª CIBM - CRISTALINA", "valor": 506766.33 },
-                { "obm": "9ª CIBM - PLANALTINA", "valor": 281714.45 },
-                { "obm": "9º BBM - CALDAS NOVAS", "valor": 797412.95 },
-                { "obm": "CAT", "valor": 8920318.43 },
-                { "obm": "Total geral", "valor": 51182273.35 }
-            ]
-        },
-        {
-            "ano": 2023,
-            "dados": [
-                { "obm": "10ª CIBM - POSSE", "valor": 168424.98 },
-                { "obm": "10º BBM - CATALÃO", "valor": 798186.12 },
-                { "obm": "11ª CIBM - URUAÇU", "valor": 392445.76 },
-                { "obm": "11º BBM - PORANGATU", "valor": 271853.71 },
-                { "obm": "12ª CIBM - MORRINHOS", "valor": 382826.60 },
-                { "obm": "12º BBM - CIDADE DE GOIÁS", "valor": 198631.21 },
-                { "obm": "13ª CIBM - IPORÁ", "valor": 236734.77 },
-                { "obm": "13º BBM - JATAÍ", "valor": 756839.76 },
-                { "obm": "14ª CIBM - PIRES DO RIO", "valor": 150165.76 },
-                { "obm": "14º BBM - SENADOR CANEDO", "valor": 460411.48 },
-                { "obm": "15ª CIBM - QUIRINÓPOLIS", "valor": 417123.82 },
-                { "obm": "15º BBM - TRINDADE", "valor": 479866.99 },
-                { "obm": "16ª CIBM - GOIATUBA", "valor": 249406.65 },
-                { "obm": "16º BBM - MINEIROS", "valor": 475884.06 },
-                { "obm": "17ª CIBM - ITABERAÍ", "valor": 288418.21 },
-                { "obm": "17º BBM - PIRENÓPOLIS", "valor": 386844.64 },
-                { "obm": "18ª CIBM - CERES", "valor": 350428.36 },
-                { "obm": "18º BBM - GOIANÉSIA", "valor": 381261.17 },
-                { "obm": "19ª CIBM - SÃO LUÍS M. BELOS", "valor": 179861.02 },
-                { "obm": "19º BBM - FORMOSA", "valor": 698677.59 },
-                { "obm": "1ª CIBM - MINAÇU", "valor": 130256.60 },
-                { "obm": "1º PBM - ARUANÃ", "valor": 185447.64 },
-                { "obm": "20ª CIBM - GOIANIRA", "valor": 144483.17 },
-                { "obm": "20º BBM-ÁGUAS LINDAS DE GOIÁS", "valor": 633627.35 },
-                { "obm": "21ª CIBM - NERÓPOLIS", "valor": 277937.69 },
-                { "obm": "22ª CIBM - S. M. DO ARAGUAIA", "valor": 147126.94 },
-                { "obm": "22º BBM - JARAGUÁ", "valor": 201673.37 },
-                { "obm": "23ª CIBM - IPAMERI", "valor": 160666.62 },
-                { "obm": "25ª CIBM - BELA VISTA DE GOIÁS", "valor": 174110.03 },
-                { "obm": "26ª CIBM - VALPARAÍSO DE GOIÁS", "valor": 653031.75 },
-                { "obm": "2º PBM - SILVÂNIA", "valor": 241434.40 },
-                { "obm": "3ª CIBM - SANTA HELENA", "valor": 374060.54 },
-                { "obm": "3º BBM - ANÁPOLIS", "valor": 1854120.53 },
-                { "obm": "3º PBM STO. A. DO DESCOBERTO", "valor": 96629.71 },
-                { "obm": "4º BBM - RIO VERDE", "valor": 2167126.03 },
-                { "obm": "4º PBM - CAMPOS BELOS", "valor": 151927.52 },
-                { "obm": "5ª CIBM - PALMEIRAS DE GOIÁS", "valor": 237933.34 },
-                { "obm": "5º BBM - LUZIÂNIA", "valor": 771725.24 },
-                { "obm": "6ª CIBM - NIQUELÂNDIA", "valor": 202165.97 },
-                { "obm": "6º BBM - ITUMBIARA", "valor": 1123800.58 },
-                { "obm": "7ª CIBM - INHUMAS", "valor": 240313.24 },
-                { "obm": "7º BBM - APARECIDA DE GOIÂNIA", "valor": 2403852.55 },
-                { "obm": "8ª CIBM - CRISTALINA", "valor": 635585.45 },
-                { "obm": "9ª CIBM - PLANALTINA", "valor": 326248.05 },
-                { "obm": "9º BBM - CALDAS NOVAS", "valor": 923068.84 },
-                { "obm": "CAT", "valor": 10313204.37 },
-                { "obm": "Total geral", "valor": 32495850.18 }
-            ]
-        },
-        {
-            "ano": 2024,
-            "dados": [
-                { "obm": "10ª CIBM - POSSE", "valor": 167285.05 },
-                { "obm": "10º BBM - CATALÃO", "valor": 1030421.86 },
-                { "obm": "11ª CIBM - URUAÇU", "valor": 416747.44 },
-                { "obm": "11º BBM - PORANGATU", "valor": 270633.79 },
-                { "obm": "12ª CIBM - MORRINHOS", "valor": 402236.68 },
-                { "obm": "12º BBM - CIDADE DE GOIÁS", "valor": 218249.42 },
-                { "obm": "13ª CIBM - IPORÁ", "valor": 238043.68 },
-                { "obm": "13º BBM - JATAÍ", "valor": 807734.19 },
-                { "obm": "14ª CIBM - PIRES DO RIO", "valor": 160471.39 },
-                { "obm": "14º BBM - SENADOR CANEDO", "valor": 541400.00 },
-                { "obm": "15ª CIBM - QUIRINÓPOLIS", "valor": 416725.04 },
-                { "obm": "15º BBM - TRINDADE", "valor": 484491.95 },
-                { "obm": "16ª CIBM - GOIATUBA", "valor": 281531.73 },
-                { "obm": "16º BBM - MINEIROS", "valor": 597777.18 },
-                { "obm": "17ª CIBM - ITABERAÍ", "valor": 280150.49 },
-                { "obm": "17º BBM - PIRENÓPOLIS", "valor": 413852.48 },
-                { "obm": "18ª CIBM - CERES", "valor": 311867.04 },
-                { "obm": "18º BBM - GOIANÉSIA", "valor": 571972.43 },
-                { "obm": "19ª CIBM - SÃO LUÍS M. BELOS", "valor": 219474.58 },
-                { "obm": "19º BBM - FORMOSA", "valor": 667912.64 },
-                { "obm": "1ª CIBM - MINAÇU", "valor": 124582.51 },
-                { "obm": "1º PBM - ARUANÃ", "valor": 142115.40 },
-                { "obm": "20ª CIBM - GOIANIRA", "valor": 177653.33 },
-                { "obm": "20º BBM-ÁGUAS LINDAS DE GOIÁS", "valor": 704472.51 },
-                { "obm": "21ª CIBM - NERÓPOLIS", "valor": 246896.85 },
-                { "obm": "22ª CIBM - S. M. DO ARAGUAIA", "valor": 175447.79 },
-                { "obm": "22º BBM - JARAGUÁ", "valor": 192488.21 },
-                { "obm": "23ª CIBM - IPAMERI", "valor": 188836.33 },
-                { "obm": "25ª CIBM - BELA VISTA DE GOIÁS", "valor": 199721.65 },
-                { "obm": "26ª CIBM - VALPARAÍSO DE GOIÁS", "valor": 753969.12 },
-                { "obm": "2º PBM - SILVÂNIA", "valor": 336148.81 },
-                { "obm": "3ª CIBM - SANTA HELENA", "valor": 355338.04 },
-                { "obm": "3º BBM - ANÁPOLIS", "valor": 2048655.36 },
-                { "obm": "3º PBM STO. A. DO DESCOBERTO", "valor": 101577.67 },
-                { "obm": "4º BBM - RIO VERDE", "valor": 2224284.04 },
-                { "obm": "4º PBM - CAMPOS BELOS", "valor": 119137.30 },
-                { "obm": "5ª CIBM - PALMEIRAS DE GOIÁS", "valor": 317210.89 },
-                { "obm": "5º BBM - LUZIÂNIA", "valor": 801203.91 },
-                { "obm": "6ª CIBM - NIQUELÂNDIA", "valor": 184762.41 },
-                { "obm": "6º BBM - ITUMBIARA", "valor": 1142792.99 },
-                { "obm": "7ª CIBM - INHUMAS", "valor": 274003.18 },
-                { "obm": "7º BBM - APARECIDA DE GOIÂNIA", "valor": 2560383.68 },
-                { "obm": "8ª CIBM - CRISTALINA", "valor": 752158.93 },
-                { "obm": "9ª CIBM - PLANALTINA", "valor": 308765.76 },
-                { "obm": "9º BBM - CALDAS NOVAS", "valor": 901439.64 },
-                { "obm": "CAT", "valor": 10419727.88 },
-                { "obm": "Total geral", "valor": 34252753.25 }
-            ]
-        }
-    ],
-    "por_secao": [
-        {
-            "ano": 2022,
-            "goiania": {
-                "projetos": 1299965.78,
-                "vistoria": 7562587.04,
-                "credenciamento": 57765.61,
-                "total": 8920318.43
-            },
-            "interior": {
-                "projetos": 2703197.58,
-                "vistoria": 39452327.93,
-                "credenciamento": 106429.41,
-                "total": 42261954.92
-            },
-            "total": {
-                "projetos": 4003163.36,
-                "vistoria": 47014914.97,
-                "credenciamento": 164195.02,
-                "total": 51182273.35
-            }
-        },
-        {
-            "ano": 2023,
-            "goiania": {
-                "projetos": 1394553.65,
-                "vistoria": 8834048.16,
-                "credenciamento": 84602.56,
-                "total": 10313204.37
-            },
-            "interior": {
-                "projetos": 3085086.10,
-                "vistoria": 18968204.12,
-                "credenciamento": 129355.59,
-                "total": 22182645.81
-            },
-            "total": {
-                "projetos": 4479639.75,
-                "vistoria": 27802252.28,
-                "credenciamento": 213958.15,
-                "total": 32495850.18
-            }
-        },
-        {
-            "ano": 2024,
-            "goiania": {
-                "projetos": 1828123.78,
-                "vistoria": 8501689.62,
-                "credenciamento": 89914.48,
-                "total": 10419727.88
-            },
-            "interior": {
-                "projetos": 4187174.73,
-                "vistoria": 19513531.25,
-                "credenciamento": 132319.39,
-                "total": 23833025.37
-            },
-            "total": {
-                "projetos": 6015298.51,
-                "vistoria": 28015220.87,
-                "credenciamento": 222233.87,
-                "total": 34252753.25
-            }
-        }
-    ],
-    "evolucao": [
-        {
-            "periodo": "2022-2023",
-            // Calculado: 32495850.18 - 51182273.35
-            "crescimento_nominal": -18686423.17,
-             // Calculado: (-18686423.17 / 51182273.35) * 100
-            "crescimento_percentual": -36.51 
-        },
-        {
-            "periodo": "2023-2024",
-            // Calculado: 34252753.25 - 32495850.18
-            "crescimento_nominal": 1756903.07,
-            // Calculado: (1756903.07 / 32495850.18) * 100
-            "crescimento_percentual": 5.41 
-        }
-    ]
-};
-
-// Para usar no seu código:
-// console.log(data);
-
-
-        // Função para formatar valores em reais
-        function formatCurrency(value) { /* ... código original ... */
-             return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 }).format(value);
-         }
-        // Função para formatar valores em reais de forma abreviada
-        function formatCurrencyShort(value) { /* ... código original ... */
-            if (value >= 1000000) { return 'R$ ' + (value / 1000000).toFixed(1) + ' mi'; }
-            else if (value >= 1000) { return 'R$ ' + (value / 1000).toFixed(1) + ' mil'; }
-            else { return 'R$ ' + value.toFixed(2); }
-        }
-        // Função para formatar percentuais
-        function formatPercentage(value) { /* ... código original ... */
-             return new Intl.NumberFormat('pt-BR', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value / 100);
-        }
-        // Configurações padrão para data labels
-        const dataLabelsConfig = { /* ... código original ... */
-            color: '#333', font: { weight: 'bold' }, formatter: function(value) { return formatCurrencyShort(value); }
-        };
-        // Cores para os gráficos
-        const chartColors = { /* ... código original ... */
-             blue: 'rgba(54, 162, 235, 0.7)', red: 'rgba(255, 99, 132, 0.7)', green: 'rgba(75, 192, 192, 0.7)', yellow: 'rgba(255, 206, 86, 0.7)', purple: 'rgba(153, 102, 255, 0.7)', orange: 'rgba(255, 159, 64, 0.7)', pink: 'rgba(255, 105, 180, 0.7)', lime: 'rgba(50, 205, 50, 0.7)', teal: 'rgba(0, 128, 128, 0.7)', brown: 'rgba(165, 42, 42, 0.7)', grey: 'rgba(128, 128, 128, 0.7)', navy: 'rgba(0, 0, 128, 0.7)'
-        };
-        const colorPalette = Object.values(chartColors);
-        let colorIndex = 0;
-        function getNextColor() { /* ... código original ... */
-             const color = colorPalette[colorIndex % colorPalette.length]; colorIndex++; return color;
-        }
-        function resetColorIndex() { colorIndex = 0; }
-
-
-        // --- Funções da Aba "Visão Geral" (sem a tabela) ---
-        function createYearlyServiceCharts() { /* ... código original ... */
-             const anos = [2022, 2023, 2024]; const projetosData = anos.map((_, i) => data.por_secao[i].total.projetos); const projetosCtx = document.getElementById('projetosYearlyChart').getContext('2d'); new Chart(projetosCtx, { type: 'bar', data: { labels: anos, datasets: [{ label: 'Projetos', data: projetosData, backgroundColor: chartColors.red, borderColor: 'rgba(255, 99, 132, 1)', borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Projetos', font: { size: 16, weight: 'bold' } }, tooltip: { callbacks: { label: (ctx) => 'Valor: ' + formatCurrency(ctx.raw) } }, datalabels: { ...dataLabelsConfig, anchor: 'end', align: 'top' } }, scales: { y: { beginAtZero: true, ticks: { callback: (val) => formatCurrencyShort(val) } } } } }); const vistoriasData = anos.map((_, i) => data.por_secao[i].total.vistoria); const vistoriasCtx = document.getElementById('vistoriasYearlyChart').getContext('2d'); new Chart(vistoriasCtx, { type: 'bar', data: { labels: anos, datasets: [{ label: 'Vistorias', data: vistoriasData, backgroundColor: chartColors.blue, borderColor: 'rgba(54, 162, 235, 1)', borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Vistorias', font: { size: 16, weight: 'bold' } }, tooltip: { callbacks: { label: (ctx) => 'Valor: ' + formatCurrency(ctx.raw) } }, datalabels: { ...dataLabelsConfig, anchor: 'end', align: 'top' } }, scales: { y: { beginAtZero: true, ticks: { callback: (val) => formatCurrencyShort(val) } } } } }); const credenciamentoData = anos.map((_, i) => data.por_secao[i].total.credenciamento); const credenciamentoCtx = document.getElementById('credenciamentoYearlyChart').getContext('2d'); new Chart(credenciamentoCtx, { type: 'bar', data: { labels: anos, datasets: [{ label: 'Credenciamento', data: credenciamentoData, backgroundColor: chartColors.yellow, borderColor: 'rgba(255, 206, 86, 1)', borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Credenciamento', font: { size: 16, weight: 'bold' } }, tooltip: { callbacks: { label: (ctx) => 'Valor: ' + formatCurrency(ctx.raw) } }, datalabels: { ...dataLabelsConfig, anchor: 'end', align: 'top' } }, scales: { y: { beginAtZero: true, ticks: { callback: (val) => formatCurrencyShort(val) } } } } });
-        }
-        function createPieCharts() { /* ... código original ... */
-             const anos = [2022, 2023, 2024]; anos.forEach((ano, index) => { const dadosAno = data.por_secao[index]; const ctx = document.getElementById(`pieChart${ano}`).getContext('2d'); new Chart(ctx, { type: 'pie', data: { labels: ['Projetos', 'Vistorias', 'Credenciamento'], datasets: [{ data: [dadosAno.total.projetos, dadosAno.total.vistoria, dadosAno.total.credenciamento], backgroundColor: [chartColors.red, chartColors.blue, chartColors.yellow], borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: `${ano}`, font: { size: 16, weight: 'bold' } }, tooltip: { callbacks: { label: function(context) { const valor = context.raw; const porcentagem = ((valor / dadosAno.total.total) * 100).toFixed(2) + '%'; return `${context.label}: ${formatCurrency(valor)} (${porcentagem})`; } } }, legend: { position: 'bottom' }, datalabels: { color: '#fff', font: { weight: 'bold', size: 12 }, formatter: function(value, context) { const total = context.dataset.data.reduce((a, b) => a + b, 0); const percentage = ((value / total) * 100).toFixed(1) + '%'; return percentage; } } } } }); });
-        }
-        function createServiceLocationPieCharts() { /* ... código original ... */
-             const createChart = (id, title, dataGetter) => { const goianiaData = data.por_secao.map(item => dataGetter(item.goiania)); const interiorData = data.por_secao.map(item => dataGetter(item.interior)); const ctx = document.getElementById(id).getContext('2d'); new Chart(ctx, { type: 'pie', data: { labels: ['Goiânia', 'Interior'], datasets: [{ data: [goianiaData.reduce((s, v) => s + v, 0), interiorData.reduce((s, v) => s + v, 0)], backgroundColor: [chartColors.blue, chartColors.red], borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: title, font: { size: 16, weight: 'bold' } }, tooltip: { callbacks: { label: function(context) { const valor = context.raw; const total = context.dataset.data.reduce((a, b) => a + b, 0); const porcentagem = ((valor / total) * 100).toFixed(2) + '%'; return `${context.label}: ${formatCurrency(valor)} (${porcentagem})`; } } }, legend: { position: 'bottom' }, datalabels: { color: '#fff', font: { weight: 'bold', size: 12 }, formatter: function(value, context) { const total = context.dataset.data.reduce((a, b) => a + b, 0); const percentage = ((value / total) * 100).toFixed(1) + '%'; return percentage; } } } } }); }; createChart('pieChartVistorias', 'Vistorias', loc => loc.vistoria); createChart('pieChartProjetos', 'Projetos', loc => loc.projetos); createChart('pieChartCredenciamento', 'Credenciamento', loc => loc.credenciamento);
-        }
-        function createLocationChart() { /* ... código original ... */
-            const anos = [2022, 2023, 2024]; const goianiaData = anos.map((_, i) => data.por_secao[i].goiania.total); const interiorData = anos.map((_, i) => data.por_secao[i].interior.total); const ctx = document.getElementById('locationChart').getContext('2d'); new Chart(ctx, { type: 'bar', data: { labels: anos, datasets: [{ label: 'Goiânia', data: goianiaData, backgroundColor: chartColors.blue, borderColor: 'rgba(54, 162, 235, 1)', borderWidth: 1 }, { label: 'Interior', data: interiorData, backgroundColor: chartColors.red, borderColor: 'rgba(255, 99, 132, 1)', borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Comparativo: Goiânia vs Interior', font: { size: 16 } }, tooltip: { callbacks: { label: (ctx) => ctx.dataset.label + ': ' + formatCurrency(ctx.raw) } }, datalabels: { color: '#fff', font: { weight: 'bold' }, formatter: (val) => formatCurrencyShort(val) } }, scales: { y: { beginAtZero: true, ticks: { callback: (val) => formatCurrencyShort(val) } } } } });
-        }
-        function createYearlyComparisonChart() { /* ... código original ... */
-             const anos = [2022, 2023, 2024]; const totais = anos.map((_, i) => data.por_organizacao[i].dados.find(item => item.obm === "Total geral").valor); const ctx = document.getElementById('yearlyComparisonChart').getContext('2d'); new Chart(ctx, { type: 'line', data: { labels: anos, datasets: [{ label: 'Arrecadação Total', data: totais, borderColor: chartColors.blue, backgroundColor: 'rgba(053, 192, 255, 0.2)', fill: true, tension: 0.1, pointRadius: 6, pointHoverRadius: 8 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Evolução da Arrecadação Anual', font: { size: 16 } }, tooltip: { callbacks: { label: (ctx) => 'Total: ' + formatCurrency(ctx.raw) } }, datalabels: { align: 'top', anchor: 'end', color: '#333', formatter: (val) => formatCurrencyShort(val) } }, scales: { y: { beginAtZero: true, ticks: { callback: (val) => formatCurrencyShort(val) } } } } });
-        }
-        // --- Fim Funções da Aba "Visão Geral" ---
-
-
-        // --- Função da Aba "Detalhamento OBM" ---
-        function populateTable(initialYear, finalYear) {
-            const tableBody = document.querySelector('#detailedTable tbody');
-            if (!tableBody) { // Adiciona verificação caso a aba não esteja ativa ainda
-                console.warn("Tabela de detalhamento não encontrada no DOM neste momento.");
-                return;
-            }
-            tableBody.innerHTML = ''; // Limpa tabela
-
-            const initialIndex = data.por_organizacao.findIndex(d => d.ano === initialYear);
-            const finalIndex = data.por_organizacao.findIndex(d => d.ano === finalYear);
-
-            if (initialIndex === -1 || finalIndex === -1) {
-                console.error("Ano inválido selecionado para tabela");
-                return;
-            }
-
-            // Atualiza o cabeçalho da coluna de variação
-            const variationHeader = document.getElementById('variationHeader');
-            if(variationHeader) variationHeader.textContent = `Variação ${initialYear}-${finalYear}`;
-
-            const allOBMs = new Set();
-            data.por_organizacao.forEach(ano => ano.dados.forEach(item => {
-                if (item.obm !== "Total geral") allOBMs.add(item.obm);
-            }));
-
-            // Cria mapas para acesso rápido aos valores
-            const dataMapInitial = new Map(data.por_organizacao[initialIndex].dados.map(item => [item.obm, item.valor]));
-            const dataMapFinal = new Map(data.por_organizacao[finalIndex].dados.map(item => [item.obm, item.valor]));
-            // Mapas para todos os anos para preencher as colunas fixas
-            const dataMap2022 = new Map(data.por_organizacao.find(d => d.ano === 2022)?.dados.map(item => [item.obm, item.valor]) || []);
-            const dataMap2023 = new Map(data.por_organizacao.find(d => d.ano === 2023)?.dados.map(item => [item.obm, item.valor]) || []);
-            const dataMap2024 = new Map(data.por_organizacao.find(d => d.ano === 2024)?.dados.map(item => [item.obm, item.valor]) || []);
-
-
-            const sortedOBMs = Array.from(allOBMs).sort((a, b) => {
-                 // Ordena pelo valor do ano final selecionado, decrescente
-                 return (dataMapFinal.get(b) || 0) - (dataMapFinal.get(a) || 0);
-            });
-
-            sortedOBMs.forEach(obm => {
-                const valueInitial = dataMapInitial.get(obm) || 0;
-                const valueFinal = dataMapFinal.get(obm) || 0;
-                let variation = 0;
-                let variationClass = '';
-
-                if (valueInitial > 0) {
-                    variation = ((valueFinal - valueInitial) / valueInitial) * 100;
-                    variationClass = variation < 0 ? 'growth-negative' : 'growth-positive';
-                } else if (valueFinal > 0) {
-                    variation = Infinity; // Ou algum indicador de crescimento a partir de zero
-                    variationClass = 'growth-positive';
-                }
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${obm}</td>
-                    <td>${formatCurrency(dataMap2022.get(obm) || 0)}</td>
-                    <td>${formatCurrency(dataMap2023.get(obm) || 0)}</td>
-                    <td>${formatCurrency(dataMap2024.get(obm) || 0)}</td>
-                    <td class="${variationClass}">${valueInitial > 0 ? variation.toFixed(2) + '%' : (valueFinal > 0 ? 'Novo' : '-')}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-
-            // Adiciona linha de Total Geral
-            const totalRow = document.createElement('tr');
-            totalRow.style.fontWeight = 'bold';
-            totalRow.style.backgroundColor = '#f8f8f8';
-
-            const totalValue2022 = data.por_organizacao.find(d => d.ano === 2022)?.dados.find(item => item.obm === "Total geral")?.valor || 0;
-            const totalValue2023 = data.por_organizacao.find(d => d.ano === 2023)?.dados.find(item => item.obm === "Total geral")?.valor || 0;
-            const totalValue2024 = data.por_organizacao.find(d => d.ano === 2024)?.dados.find(item => item.obm === "Total geral")?.valor || 0;
-            const totalValueInitial = data.por_organizacao[initialIndex].dados.find(item => item.obm === "Total geral")?.valor || 0;
-            const totalValueFinal = data.por_organizacao[finalIndex].dados.find(item => item.obm === "Total geral")?.valor || 0;
-
-            let totalVariation = 0;
-            let totalVariationClass = '';
-            if (totalValueInitial > 0) {
-                totalVariation = ((totalValueFinal - totalValueInitial) / totalValueInitial) * 100;
-                totalVariationClass = totalVariation < 0 ? 'growth-negative' : 'growth-positive';
-            }
-
-            totalRow.innerHTML = `
-                <td>Total Geral</td>
-                <td>${formatCurrency(totalValue2022)}</td>
-                <td>${formatCurrency(totalValue2023)}</td>
-                <td>${formatCurrency(totalValue2024)}</td>
-                <td class="${totalVariationClass}">${totalValueInitial > 0 ? totalVariation.toFixed(2) + '%' : '-'}</td>
-            `;
-            tableBody.appendChild(totalRow);
-        }
-
-
-        // --- Funções e Lógica da Aba "Comparar OBMs" (sem alterações) ---
-        let obmComparisonChartInstance = null;
-        let comparedOBMs = [];
-
-        function populateOBMDrowpdown() { /* ... código original ... */
-             const dropdown = document.getElementById('obmAddDropdown'); while (dropdown.options.length > 1) { dropdown.remove(1); } const allOBMs = new Set(); data.por_organizacao.forEach(anoData => { anoData.dados.forEach(item => { if (item.obm !== "Total geral") { allOBMs.add(item.obm); } }); }); const sortedOBMs = Array.from(allOBMs).sort(); sortedOBMs.forEach(obm => { const option = document.createElement('option'); option.value = obm; option.textContent = obm; dropdown.appendChild(option); });
-        }
-        function displaySelectedOBMs() { /* ... código original ... */
-             const listDiv = document.getElementById('selectedOBMList'); listDiv.innerHTML = ''; comparedOBMs.forEach(obm => { const itemSpan = document.createElement('span'); itemSpan.className = 'selected-obm-item'; itemSpan.textContent = obm; const removeBtn = document.createElement('button'); removeBtn.className = 'remove-obm-btn'; removeBtn.textContent = 'x'; removeBtn.title = `Remover ${obm}`; removeBtn.onclick = () => removeOBMFromComparison(obm); itemSpan.appendChild(removeBtn); listDiv.appendChild(itemSpan); });
-        }
-        function removeOBMFromComparison(obmToRemove) { /* ... código original ... */
-             comparedOBMs = comparedOBMs.filter(obm => obm !== obmToRemove); displaySelectedOBMs(); createOrUpdateOBMComparisonChart();
-        }
-        function prepareOBMComparisonData() { /* ... código original ... */
-             const anos = [2022, 2023, 2024]; const datasets = []; resetColorIndex(); comparedOBMs.forEach(obm => { const obmData = anos.map(ano => { const anoData = data.por_organizacao.find(d => d.ano === ano); const obmEntry = anoData?.dados.find(item => item.obm === obm); return obmEntry ? obmEntry.valor : 0; }); const bgColor = getNextColor(); const borderColor = bgColor.replace('0.7', '1'); datasets.push({ label: obm, data: obmData, backgroundColor: bgColor, borderColor: borderColor, borderWidth: 1, fill: false }); }); return { labels: anos, datasets: datasets };
-        }
-        function createOrUpdateOBMComparisonChart() { /* ... código original ... */
-            const messageElement = document.getElementById('obmComparisonMessage');
-            const canvas = document.getElementById('obmComparisonChart');
-            const ctx = canvas.getContext('2d');
-            const selectedListContainer = document.getElementById('selectedOBMListContainer');
-
-            if (!canvas) return; // Previne erro se a aba não estiver no DOM ainda
-
-            if (obmComparisonChartInstance) { obmComparisonChartInstance.destroy(); obmComparisonChartInstance = null;}
-            if (comparedOBMs.length === 0) {
-                 if(messageElement) messageElement.style.display = 'block';
-                 if(canvas) canvas.style.display = 'none';
-                 if(selectedListContainer) selectedListContainer.style.display = 'none';
-                 return;
-            }
-
-            if(messageElement) messageElement.style.display = 'none';
-            if(canvas) canvas.style.display = 'block';
-            if(selectedListContainer) selectedListContainer.style.display = 'block';
-
-            const chartData = prepareOBMComparisonData();
-            obmComparisonChartInstance = new Chart(ctx, {
-                type: 'bar', data: chartData,
-                options: { /* ... opções do gráfico original ... */
-                     responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: `Comparativo Anual de Arrecadação por OBM`, font: { size: 16 } }, tooltip: { mode: 'index', intersect: false, callbacks: { label: function(context) { return `${context.dataset.label}: ${formatCurrency(context.raw)}`; } } }, datalabels: { display: false }, legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Arrecadação (R$)' }, ticks: { callback: value => formatCurrencyShort(value) } }, x: { title: { display: true, text: 'Ano' } } }
-                }
-            });
-        }
-
-
-        // --- Controle das Abas (sem alterações na função) ---
-        function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-                tabcontent[i].classList.remove("active");
-            }
-            tablinks = document.getElementsByClassName("tab-button");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].classList.remove("active");
-            }
-            const currentTabContent = document.getElementById(tabName);
-            if (currentTabContent) {
-                currentTabContent.style.display = "block";
-                currentTabContent.classList.add("active");
-            }
-            if (evt && evt.currentTarget) {
-                 evt.currentTarget.classList.add("active");
-            }
-
-
-             // Redimensiona o gráfico de comparação APENAS se essa aba for aberta
-             if(tabName === 'compararOBMs') {
-                 setTimeout(() => {
-                     // Verifica se a instância existe ANTES de tentar redimensionar
-                     if (obmComparisonChartInstance) {
-                         obmComparisonChartInstance.resize();
-                     } else {
-                         // Se não existe, tenta criar (caso seja a primeira vez que abre a aba)
-                         createOrUpdateOBMComparisonChart();
-                     }
-                 }, 10); // Pequeno delay para garantir que a aba está visível
-             }
-        }
-
-
-        // --- Inicialização ---
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inicializa gráficos da aba "Visão Geral"
-            createYearlyServiceCharts();
-            createPieCharts();
-            createServiceLocationPieCharts();
-            createLocationChart();
-            createYearlyComparisonChart();
-
-            // Configura e popula tabela da aba "Detalhamento OBM"
-            const yearInitialSelect = document.getElementById('yearInitial');
-            const yearFinalSelect = document.getElementById('yearFinal');
-            // Popula a tabela inicialmente (mesmo que a aba não esteja visível)
-            populateTable(parseInt(yearInitialSelect.value), parseInt(yearFinalSelect.value));
-
-            // Listeners para atualizar tabela da "Detalhamento OBM"
-            yearInitialSelect.addEventListener('change', function() {
-                const initialYear = parseInt(this.value);
-                const finalYear = parseInt(yearFinalSelect.value);
-                // Garante que ano final seja sempre maior ou igual ao inicial
-                 if (initialYear >= finalYear) {
-                     yearFinalSelect.value = (initialYear === 2022) ? '2023' : '2024';
-                     // Ajusta 2023 se 2024 for selecionado como inicial (só há 2024 depois)
-                     if(initialYear === 2023 && finalYear <= 2023) yearFinalSelect.value = '2024';
-                 }
-                populateTable(initialYear, parseInt(yearFinalSelect.value));
-            });
-            yearFinalSelect.addEventListener('change', function() {
-                const initialYear = parseInt(yearInitialSelect.value);
-                const finalYear = parseInt(this.value);
-                 // Garante que ano inicial seja sempre menor ou igual ao final
-                 if (finalYear <= initialYear) {
-                    yearInitialSelect.value = (finalYear === 2024) ? '2023' : '2022';
-                     // Ajusta 2023 se 2022 for selecionado como final (só há 2022 antes)
-                    if(finalYear === 2023 && initialYear >= 2023) yearInitialSelect.value = '2022';
-                }
-                populateTable(parseInt(yearInitialSelect.value), finalYear);
-            });
-
-            // --- Inicialização da Aba "Comparar OBMs" ---
-            populateOBMDrowpdown();
-            // Não chama displaySelectedOBMs() ou createOrUpdateOBMComparisonChart() aqui
-            // Eles serão chamados quando a aba for aberta pela primeira vez ou quando uma OBM for adicionada/removida
-
-            // Adiciona listener ao dropdown para adicionar OBMs
-            document.getElementById('obmAddDropdown').addEventListener('change', function(event) {
-                const selectedOBM = event.target.value;
-                if (selectedOBM && !comparedOBMs.includes(selectedOBM)) {
-                    comparedOBMs.push(selectedOBM);
-                    displaySelectedOBMs();
-                    createOrUpdateOBMComparisonChart();
-                }
-                event.target.selectedIndex = 0; // Reseta dropdown
-            });
-
-             // Garante que o estado inicial da aba de comparação esteja correto (escondido)
-             const initialCompMsg = document.getElementById('obmComparisonMessage');
-             const initialCompCanvas = document.getElementById('obmComparisonChart');
-             const initialCompList = document.getElementById('selectedOBMListContainer');
-             if (initialCompMsg) initialCompMsg.style.display = 'block';
-             if (initialCompCanvas) initialCompCanvas.style.display = 'none';
-             if (initialCompList) initialCompList.style.display = 'none';
-
-             // Define a aba inicial como ativa (Visão Geral) - Opcional, já feito com 'active' no HTML
-             // openTab(null, 'visaoGeral');
-
-        });
-    </script>
-</body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/1.2.1/chartjs-plugin-zoom.min.js"></script>
+    <script src="script.js"></script>
+  </body>
 </html>
