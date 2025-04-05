@@ -578,6 +578,17 @@ button:hover {
 .obm-comparison-chart-container {
   min-height: 450px; /* Altura mínima para o gráfico de comparação */
 }
+/* Adicione este código ao seu CSS */
+.filter-group input[type="checkbox"] {
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+.filter-group label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
 /* --- Fim Estilos Comparação OBM --- */
 @media (max-width: 768px) {
   .summary-cards,
