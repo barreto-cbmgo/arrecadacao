@@ -308,6 +308,8 @@ const colorPalette = Object.values(chartColors);
 let colorIndex = 0;
 // Adicione esta linha após as outras declarações de variáveis
 let includeCAT = false; // Estado inicial: não mostrar CAT
+let includeJatai = true; // Estado inicial: mostrar Jataí
+
 function getNextColor() {
   /* ... código original ... */
   const color = colorPalette[colorIndex % colorPalette.length];
@@ -1038,6 +1040,7 @@ function calculateRankings(rankingType, initialYear, finalYear) {
           // Incluir CAT se o toggle estiver ativado
           if (item.obm === "Total geral") return false;
           if (item.obm === "CAT" && !includeCAT) return false;
+          if (item.obm === "13º BBM - JATAÍ" && !includeJatai) return false;
           return true;
         })
         .map(item => item.obm)
@@ -1414,7 +1417,35 @@ if (catToggle) {
     }
   });
 }
-  
+  // Adicione este código logo após o event listener do catToggle
+const jataiToggle = document.getElementById('includeJataiToggle');
+if (jataiToggle) {
+  jataiToggle.addEventListener('change', function() {
+    includeJatai = this.checked;
+    
+    // Atualizar todos os gráficos relevantes
+    if (document.getElementById('rankingsAnalises').classList.contains('active')) {
+      // Atualizar Rankings
+      updateRankings();
+      
+      // Atualizar Contribuição
+      const contributionYear = parseInt(document.getElementById('contributionYear').value);
+      createOrUpdateContributionChart(contributionYear);
+      
+      // Atualizar Performance Relativa
+      const performanceYear = parseInt(document.getElementById('performanceYear').value);
+      const performanceView = document.getElementById('performanceView').value;
+      createOrUpdatePerformanceChart(performanceYear, performanceView);
+      
+      // Atualizar Quadrantes (se existir)
+      if (typeof createOrUpdateQuadrantesChart === 'function') {
+        const anoX = document.getElementById('quadranteAnoX').value;
+        const periodoY = document.getElementById('quadrantePeriodoY').value;
+        createOrUpdateQuadrantesChart(anoX, periodoY);
+      }
+    }
+  });
+}
   // Configura e popula tabela da aba "Detalhamento OBM"
   const yearInitialSelect = document.getElementById("yearInitial");
   const yearFinalSelect = document.getElementById("yearFinal");
@@ -1494,6 +1525,8 @@ function calculateContributions(year) {
       // Incluir CAT se o toggle estiver ativado
       if (item.obm === "Total geral") return false;
       if (item.obm === "CAT" && !includeCAT) return false;
+      if (item.obm === "13º BBM - JATAÍ" && !includeJatai) return false;
+
       return true;
     })
     .map(item => {
@@ -1702,6 +1735,8 @@ function calculatePerformanceData(year, viewMode) {
       // Incluir CAT se o toggle estiver ativado
       if (item.obm === "Total geral") return false;
       if (item.obm === "CAT" && !includeCAT) return false;
+      if (item.obm === "13º BBM - JATAÍ" && !includeJatai) return false;
+
       return true;
     })
     .map(item => {
@@ -2042,6 +2077,8 @@ function updatePerformanceSummary(obmData, media, year) {
           // Incluir CAT se o toggle estiver ativado
           if (item.obm === "Total geral") return false;
           if (item.obm === "CAT" && !includeCAT) return false;
+          if (item.obm === "13º BBM - JATAÍ" && !includeJatai) return false;
+
           return true;
         })
         .map(item => item.obm)
