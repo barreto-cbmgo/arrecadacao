@@ -217,22 +217,20 @@
       <!-- Fim da Aba Comparar OBMs -->
 
       <!-- Conteúdo da Aba Rankings e Análises -->
+      <div id="rankingsAnalises" class="tab-content">
+        <div class="floating-controls">
+          <label for="includeCATToggle">
+            <input type="checkbox" id="includeCATToggle"> Incluir CAT nos gráficos
+          </label>
+          <label for="includeJataiToggle">
+            <input type="checkbox" id="includeJataiToggle"> Incluir Jataí nos gráficos
+          </label>
+        </div>
 
-          <!-- Adicione logo após o checkbox do CAT na seção de filtros da aba Rankings e Análises -->
-<div class="floating-controls">
-  <label for="includeCATToggle">
-    <input type="checkbox" id="includeCATToggle"> Incluir CAT nos gráficos
-  </label>
-  <label for="includeJataiToggle">
-    <input type="checkbox" id="includeJataiToggle"> Incluir Jataí nos gráficos
-  </label>
-</div>      <div id="rankingsAnalises" class="tab-content">
         <!-- Seção de Rankings de OBMs -->
         <div class="section">
           <div class="section-title">Rankings de OBMs</div>
-          <div class="filter-group">
-
-
+          
           <!-- Controles de filtro para a seção de rankings -->
           <div class="filter-section">
             <div class="filter-group">
@@ -320,7 +318,6 @@
                 <option value="all">Todas as OBMs</option>
               </select>
             </div>
-            <!-- Adicione logo após a última div class="filter-group" na seção de filtros da aba Rankings e Análises -->
           </div>
           
           <div class="performance-container">
@@ -332,10 +329,11 @@
             </div>
           </div>
         </div>
-
-      
+      </div>
       <!-- Fim da Aba Rankings e Análises -->
+      
     </div>
+    <!-- Fim do div.dashboard -->
 
     <!-- Carregando a biblioteca Chart.js e plugins -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
