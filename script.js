@@ -248,7 +248,34 @@ const data = {
     },
   ],
 };
+// Create a modified version of the data with normalized Jataí value
+const normalizedData = JSON.parse(JSON.stringify(data)); // Deep clone
 
+// Find Jataí in 2022 data and replace its value
+const jataiIndex = normalizedData.por_organizacao[0].dados.findIndex(item => item.obm === "13º BBM - JATAÍ");
+if (jataiIndex !== -1) {
+  const originalValue = normalizedData.por_organizacao[0].dados[jataiIndex].valor;
+  const normalizedValue = 782286.97; // The average value to use
+  const difference = originalValue - normalizedValue;
+  
+  // Update Jataí's value
+  normalizedData.por_organizacao[0].dados[jataiIndex].valor = normalizedValue;
+  
+  // Update the total
+  const totalIndex = normalizedData.por_organizacao[0].dados.findIndex(item => item.obm === "Total geral");
+  if (totalIndex !== -1) {
+    normalizedData.por_organizacao[0].dados[totalIndex].valor -= difference;
+  }
+  
+  // Update the por_secao data for 2022
+  normalizedData.por_secao[0].interior.vistoria -= difference;
+  normalizedData.por_secao[0].interior.total -= difference;
+  normalizedData.por_secao[0].total.vistoria -= difference;
+  normalizedData.por_secao[0].total.total -= difference;
+}
+
+// Set up a variable to track which data set we're using
+let currentData = data;
 // Para usar no seu código:
 // console.log(data);
 
@@ -324,7 +351,7 @@ function resetColorIndex() {
 function createYearlyServiceCharts() {
   /* ... código original ... */
   const anos = [2022, 2023, 2024];
-  const projetosData = anos.map((_, i) => data.por_secao[i].total.projetos);
+  const projetosData = anos.map((_, i) => currentData.por_secao[i].total.projetos);
   const projetosCtx = document
     .getElementById("projetosYearlyChart")
     .getContext("2d");
@@ -457,7 +484,7 @@ function createPieCharts() {
   /* ... código original ... */
   const anos = [2022, 2023, 2024];
   anos.forEach((ano, index) => {
-    const dadosAno = data.por_secao[index];
+    const dadosAno = currentData.por_secao[index];
     const ctx = document.getElementById(`pieChart${ano}`).getContext("2d");
     new Chart(ctx, {
       type: "pie",
@@ -518,8 +545,8 @@ function createPieCharts() {
 function createServiceLocationPieCharts() {
   /* ... código original ... */
   const createChart = (id, title, dataGetter) => {
-    const goianiaData = data.por_secao.map((item) => dataGetter(item.goiania));
-    const interiorData = data.por_secao.map((item) =>
+    const goianiaData = currentData.por_secao.map((item) => dataGetter(item.goiania));
+    const interiorData = currentData.por_secao.map((item) =>
       dataGetter(item.interior)
     );
     const ctx = document.getElementById(id).getContext("2d");
@@ -584,8 +611,8 @@ function createServiceLocationPieCharts() {
 function createLocationChart() {
   /* ... código original ... */
   const anos = [2022, 2023, 2024];
-  const goianiaData = anos.map((_, i) => data.por_secao[i].goiania.total);
-  const interiorData = anos.map((_, i) => data.por_secao[i].interior.total);
+  const goianiaData = anos.map((_, i) => currentData.por_secao[i].goiania.total);
+  const interiorData = anos.map((_, i) => currentData.por_secao[i].interior.total);
   const ctx = document.getElementById("locationChart").getContext("2d");
   new Chart(ctx, {
     type: "bar",
@@ -642,7 +669,7 @@ function createYearlyComparisonChart() {
   const anos = [2022, 2023, 2024];
   const totais = anos.map(
     (_, i) =>
-      data.por_organizacao[i].dados.find((item) => item.obm === "Total geral")
+      currentData.por_organizacao[i].dados.find((item) => item.obm === "Total geral")
         .valor
   );
   const ctx = document.getElementById("yearlyComparisonChart").getContext("2d");
@@ -1388,6 +1415,33 @@ document.addEventListener("DOMContentLoaded", function () {
   createLocationChart();
   createYearlyComparisonChart();
 
+  // Add event listener for the Jataí toggle in the first tab
+  const jataiToggleFirstTab = document.getElementById('includeJataiToggleFirstTab');
+  if (jataiToggleFirstTab) {
+    jataiToggleFirstTab.addEventListener('change', function() {
+      // Update our current data based on toggle state
+      currentData = this.checked ? data : normalizedData;
+      
+      // Update all graphs in the first tab
+      createYearlyServiceCharts();
+      createPieCharts();
+      createServiceLocationPieCharts();
+      createLocationChart();
+      createYearlyComparisonChart();
+      
+      // Update card values
+      document.getElementById('total2022').textContent = formatCurrency(currentData.por_secao[0].total.total);
+      
+      // Update growth percentage
+      const growth2023 = ((currentData.por_secao[1].total.total - currentData.por_secao[0].total.total) / currentData.por_secao[0].total.total) * 100;
+      const growthElement = document.querySelector('#total2023 + .card-subtitle');
+      if (growthElement) {
+        growthElement.textContent = growth2023.toFixed(2) + '% em relação a 2022';
+        growthElement.className = 'card-subtitle ' + (growth2023 < 0 ? 'growth-negative' : 'growth-positive');
+      }
+    });
+  }
+  
 // Adicione este código junto com os outros event listeners
 const catToggle = document.getElementById('includeCATToggle');
 if (catToggle) {
@@ -2000,7 +2054,10 @@ function updatePerformanceSummary(obmData, media, year) {
       }
     });
   });
-  
+    document.getElementById('total2022').textContent = formatCurrency(currentData.por_secao[0].total.total);
+  document.getElementById('total2023').textContent = formatCurrency(currentData.por_secao[1].total.total);
+  document.getElementById('total2024').textContent = formatCurrency(currentData.por_secao[2].total.total);
+
   // Adicionar eventos para o controle do tipo de ranking
   if (rankingTypeSelect) {
     rankingTypeSelect.addEventListener('change', updateRankings);
