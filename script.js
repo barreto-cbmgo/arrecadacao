@@ -306,6 +306,8 @@ const chartColors = {
 };
 const colorPalette = Object.values(chartColors);
 let colorIndex = 0;
+// Adicione esta linha após as outras declarações de variáveis
+let includeCAT = false; // Estado inicial: não mostrar CAT
 function getNextColor() {
   /* ... código original ... */
   const color = colorPalette[colorIndex % colorPalette.length];
@@ -1029,13 +1031,19 @@ function calculateRankings(rankingType, initialYear, finalYear) {
   );
   
   // Lista de todas as OBMs (excluindo o Total geral)
-  const allOBMs = Array.from(new Set(
+    const allOBMs = Array.from(new Set(
     data.por_organizacao.flatMap(year => 
       year.dados
-        .filter(item => item.obm !== "Total geral" && item.obm !== "CAT")
+        .filter(item => {
+          // Incluir CAT se o toggle estiver ativado
+          if (item.obm === "Total geral") return false;
+          if (item.obm === "CAT" && !includeCAT) return false;
+          return true;
+        })
         .map(item => item.obm)
     )
   ));
+
   
   // Calcular valor para cada OBM baseado no tipo de ranking
   const rankingData = allOBMs.map(obm => {
@@ -1377,6 +1385,36 @@ document.addEventListener("DOMContentLoaded", function () {
   createLocationChart();
   createYearlyComparisonChart();
 
+// Adicione este código junto com os outros event listeners
+const catToggle = document.getElementById('includeCATToggle');
+if (catToggle) {
+  catToggle.addEventListener('change', function() {
+    includeCAT = this.checked;
+    
+    // Atualizar todos os gráficos relevantes
+    if (document.getElementById('rankingsAnalises').classList.contains('active')) {
+      // Atualizar Rankings
+      updateRankings();
+      
+      // Atualizar Contribuição
+      const contributionYear = parseInt(document.getElementById('contributionYear').value);
+      createOrUpdateContributionChart(contributionYear);
+      
+      // Atualizar Performance Relativa
+      const performanceYear = parseInt(document.getElementById('performanceYear').value);
+      const performanceView = document.getElementById('performanceView').value;
+      createOrUpdatePerformanceChart(performanceYear, performanceView);
+      
+      // Atualizar Quadrantes (se existir)
+      if (typeof createOrUpdateQuadrantesChart === 'function') {
+        const anoX = document.getElementById('quadranteAnoX').value;
+        const periodoY = document.getElementById('quadrantePeriodoY').value;
+        createOrUpdateQuadrantesChart(anoX, periodoY);
+      }
+    }
+  });
+}
+  
   // Configura e popula tabela da aba "Detalhamento OBM"
   const yearInitialSelect = document.getElementById("yearInitial");
   const yearFinalSelect = document.getElementById("yearFinal");
@@ -1452,7 +1490,12 @@ function calculateContributions(year) {
   
   // Filtrar e mapear os dados (excluindo o total geral e CAT que é duplicado)
   const filteredData = yearData.dados
-    .filter(item => item.obm !== "Total geral" && item.obm !== "CAT")
+    .filter(item => {
+      // Incluir CAT se o toggle estiver ativado
+      if (item.obm === "Total geral") return false;
+      if (item.obm === "CAT" && !includeCAT) return false;
+      return true;
+    })
     .map(item => {
       return {
         obm: item.obm,
@@ -1654,14 +1697,20 @@ function calculatePerformanceData(year, viewMode) {
   }
   
   // Filtrar e mapear os dados (excluindo o total geral e CAT)
-  const filteredData = yearData.dados
-    .filter(item => item.obm !== "Total geral" && item.obm !== "CAT")
+    const filteredData = yearData.dados
+    .filter(item => {
+      // Incluir CAT se o toggle estiver ativado
+      if (item.obm === "Total geral") return false;
+      if (item.obm === "CAT" && !includeCAT) return false;
+      return true;
+    })
     .map(item => {
       return {
         obm: item.obm,
         valor: item.valor
       };
     });
+
   
   // Calcular a média de arrecadação por OBM
   const totalArrecadacao = filteredData.reduce((sum, item) => sum + item.valor, 0);
@@ -1987,12 +2036,18 @@ function updatePerformanceSummary(obmData, media, year) {
     
     // Obter a lista de OBMs (excluindo Total geral e CAT)
     const obms = Array.from(new Set(
-      data.por_organizacao.flatMap(year => 
-        year.dados
-          .filter(item => item.obm !== "Total geral" && item.obm !== "CAT") // Excluir CAT
-          .map(item => item.obm)
-      )
-    ));
+    data.por_organizacao.flatMap(year => 
+      year.dados
+        .filter(item => {
+          // Incluir CAT se o toggle estiver ativado
+          if (item.obm === "Total geral") return false;
+          if (item.obm === "CAT" && !includeCAT) return false;
+          return true;
+        })
+        .map(item => item.obm)
+    )
+  ));
+
     
     // Calcular os valores para cada OBM
     const obmData = obms.map(obm => {
