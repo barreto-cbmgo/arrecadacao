@@ -235,8 +235,8 @@ const data = {
     {
       periodo: "2022-2023",
       // Calculado: 32495850.18 - 27874466.53
-      crescimento_nominal: 4621384.00,
-      // Calculado: (4621384 / 27874466.53) * 100
+      crescimento_nominal: 4621384.65,
+      // Calculado: (4621384.65 / 27874466.53) * 100
       crescimento_percentual: 16.57,
     },
     {
