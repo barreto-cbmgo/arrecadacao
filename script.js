@@ -177,7 +177,7 @@ const data = {
       },
       interior: {
         projetos: 2703197.58,
-        vistoria: 16144521,11,
+        vistoria: 16144521.11,
         credenciamento: 106429.41,
         total: 18954148.10,
       },
