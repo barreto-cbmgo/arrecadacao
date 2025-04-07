@@ -1043,7 +1043,6 @@ function calculateRankings(rankingType, initialYear, finalYear) {
           // Incluir CAT se o toggle estiver ativado
           if (item.obm === "Total geral") return false;
           if (item.obm === "CAT" && !includeCAT) return false;
-          if (item.obm === "13º BBM - JATAÍ" && !includeJatai) return false;
           return true;
         })
         .map(item => item.obm)
@@ -1528,7 +1527,6 @@ function calculateContributions(year) {
       // Incluir CAT se o toggle estiver ativado
       if (item.obm === "Total geral") return false;
       if (item.obm === "CAT" && !includeCAT) return false;
-      if (item.obm === "13º BBM - JATAÍ" && !includeJatai) return false;
 
       return true;
     })
@@ -1738,7 +1736,6 @@ function calculatePerformanceData(year, viewMode) {
       // Incluir CAT se o toggle estiver ativado
       if (item.obm === "Total geral") return false;
       if (item.obm === "CAT" && !includeCAT) return false;
-      if (item.obm === "13º BBM - JATAÍ" && !includeJatai) return false;
 
       return true;
     })
@@ -2080,7 +2077,6 @@ function updatePerformanceSummary(obmData, media, year) {
           // Incluir CAT se o toggle estiver ativado
           if (item.obm === "Total geral") return false;
           if (item.obm === "CAT" && !includeCAT) return false;
-          if (item.obm === "13º BBM - JATAÍ" && !includeJatai) return false;
 
           return true;
         })
