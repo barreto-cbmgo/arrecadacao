@@ -639,12 +639,17 @@ function createLocationChart() {
 }
 function createYearlyComparisonChart() {
   /* ... código original ... */
-  const anos = [2022, 2023, 2024];
-  const totais = anos.map(
-    (_, i) =>
-      data.por_organizacao[i].dados.find((item) => item.obm === "Total geral")
-        .valor
-  );
+  // --- CORRECTED DATA EXTRACTION ---
+  const totais = anos.map(ano => { // Iterate using the actual year value
+    const yearData = data.por_organizacao.find(d => d.ano === ano); // Find data for this specific year
+    if (yearData) {
+      const totalEntry = yearData.dados.find(item => item.obm === "Total geral");
+      return totalEntry ? totalEntry.valor : 0; // Return value or 0 if not found
+    }
+    return 0; // Return 0 if the year itself isn't found
+  });
+  // --- END OF CORRECTION ---
+
   const ctx = document.getElementById("yearlyComparisonChart").getContext("2d");
   new Chart(ctx, {
     type: "line",
