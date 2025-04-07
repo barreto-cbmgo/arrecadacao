@@ -183,7 +183,7 @@ const data = {
       },
       total: {
         projetos: 4003163.36,
-        vistoria: 47014914.97,
+        vistoria: 23707108.15,
         credenciamento: 164195.02,
         total: 27874466.53,
       },
