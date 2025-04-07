@@ -308,7 +308,7 @@ const colorPalette = Object.values(chartColors);
 let colorIndex = 0;
 // Adicione esta linha após as outras declarações de variáveis
 let includeCAT = false; // Estado inicial: não mostrar CAT
-let includeJatai = true; // Estado inicial: mostrar Jataí
+let includeJatai = false; // Estado inicial: mostrar Jataí
 
 function getNextColor() {
   /* ... código original ... */
