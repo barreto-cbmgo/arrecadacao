@@ -19,7 +19,7 @@ const data = {
         { obm: "12ª CIBM - MORRINHOS", valor: 280585.53 },
         { obm: "12º BBM - CIDADE DE GOIÁS", valor: 205731.03 },
         { obm: "13ª CIBM - IPORÁ", valor: 214241.86 },
-        { obm: "13º BBM - JATAÍ", valor: 791806.00 },
+        { obm: "13º BBM - JATAÍ", valor: 791806.01 },
         { obm: "14ª CIBM - PIRES DO RIO", valor: 115832.16 },
         { obm: "14º BBM - SENADOR CANEDO", valor: 385582.28 },
         { obm: "15ª CIBM - QUIRINÓPOLIS", valor: 303311.93 },
@@ -235,7 +235,7 @@ const data = {
     {
       periodo: "2022-2023",
       // Calculado: 32495850.18 - 27874466.53
-      crescimento_nominal: 4621384,
+      crescimento_nominal: 4621384.00,
       // Calculado: (4621384 / 27874466.53) * 100
       crescimento_percentual: 16.57,
     },
