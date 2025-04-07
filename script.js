@@ -234,10 +234,10 @@ const data = {
   evolucao: [
     {
       periodo: "2022-2023",
-      // Calculado: 32495850.18 - 51182273.35
+      // Calculado: 32495850.18 - 27874466.53
       crescimento_nominal: -18686423.17,
-      // Calculado: (-18686423.17 / 51182273.35) * 100
-      crescimento_percentual: -36.51,
+      // Calculado: (-18686423.17 / 27874466.53) * 100
+      crescimento_percentual: 16,57,
     },
     {
       periodo: "2023-2024",
