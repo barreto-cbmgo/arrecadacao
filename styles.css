@@ -629,7 +629,33 @@ button:hover {
     padding: 10px;
   }
 }
+/* CONFIGURAÇÃO GRÁFICOS */
+/* Adicione estas regras ao seu styles.css */
 
+/* Garante que os contêineres principais dos gráficos não ultrapassem seus pais */
+.chart-container,
+.pie-chart,
+.rankings-chart, /* Inclua containers específicos */
+.contribution-chart-container,
+.performance-chart-container,
+.quadrantes-chart-container,
+.obm-comparison-chart-container {
+  max-width: 100%; /* Impede que sejam mais largos que o pai */
+  position: relative; /* Mantém a posição relativa para Chart.js funcionar */
+  overflow: hidden; /* Opcional: esconde qualquer transbordamento mínimo, mas o ideal é evitar */
+}
+
+/* Estilos diretos para o elemento canvas */
+canvas {
+  display: block; /* Remove espaços extras abaixo do canvas */
+  max-width: 100%; /* Garante que o canvas não seja maior que seu contêiner */
+  height: auto !important; /* Permite que a altura se ajuste baseada na largura mantida pelo Chart.js, override de altura fixa se necessário */
+}
+
+/* Adiciona box-sizing para facilitar o controle de tamanho */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 /* Versão responsiva */
 @media (max-width: 768px) {
   .filter-group + .filter-group {
