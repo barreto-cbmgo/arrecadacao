@@ -19,7 +19,7 @@ const data = {
         { obm: "12ª CIBM - MORRINHOS", valor: 280585.53 },
         { obm: "12º BBM - CIDADE DE GOIÁS", valor: 205731.03 },
         { obm: "13ª CIBM - IPORÁ", valor: 214241.86 },
-        { obm: "13º BBM - JATAÍ", valor: 24092298.59 },
+        { obm: "13º BBM - JATAÍ", valor: 791806.00 },
         { obm: "14ª CIBM - PIRES DO RIO", valor: 115832.16 },
         { obm: "14º BBM - SENADOR CANEDO", valor: 385582.28 },
         { obm: "15ª CIBM - QUIRINÓPOLIS", valor: 303311.93 },
@@ -58,7 +58,7 @@ const data = {
         { obm: "9ª CIBM - PLANALTINA", valor: 281714.45 },
         { obm: "9º BBM - CALDAS NOVAS", valor: 797412.95 },
         { obm: "CAT", valor: 8920318.43 },
-        { obm: "Total geral", valor: 51182273.35 },
+        { obm: "Total geral", valor: 27874466.53 },
       ],
     },
     {
@@ -177,15 +177,15 @@ const data = {
       },
       interior: {
         projetos: 2703197.58,
-        vistoria: 39452327.93,
+        vistoria: 16144521,11,
         credenciamento: 106429.41,
-        total: 42261954.92,
+        total: 18954148.10,
       },
       total: {
         projetos: 4003163.36,
         vistoria: 47014914.97,
         credenciamento: 164195.02,
-        total: 51182273.35,
+        total: 27874466.53,
       },
     },
     {
