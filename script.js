@@ -1042,7 +1042,6 @@ function calculateRankings(rankingType, initialYear, finalYear) {
         .filter(item => {
           // Incluir CAT se o toggle estiver ativado
           if (item.obm === "Total geral") return false;
-          if (item.obm === "CAT" && !includeCAT) return false;
           return true;
         })
         .map(item => item.obm)
@@ -1526,8 +1525,6 @@ function calculateContributions(year) {
     .filter(item => {
       // Incluir CAT se o toggle estiver ativado
       if (item.obm === "Total geral") return false;
-      if (item.obm === "CAT" && !includeCAT) return false;
-
       return true;
     })
     .map(item => {
@@ -1735,8 +1732,6 @@ function calculatePerformanceData(year, viewMode) {
     .filter(item => {
       // Incluir CAT se o toggle estiver ativado
       if (item.obm === "Total geral") return false;
-      if (item.obm === "CAT" && !includeCAT) return false;
-
       return true;
     })
     .map(item => {
@@ -2076,8 +2071,6 @@ function updatePerformanceSummary(obmData, media, year) {
         .filter(item => {
           // Incluir CAT se o toggle estiver ativado
           if (item.obm === "Total geral") return false;
-          if (item.obm === "CAT" && !includeCAT) return false;
-
           return true;
         })
         .map(item => item.obm)
