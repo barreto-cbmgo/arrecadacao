@@ -626,17 +626,7 @@ button:hover {
   width: 100%;      /* Mantém a largura responsiva dentro do seu layout */
 }
 
-/* Opcional: Se o gráfico de barras empilhadas precisar de mais altura,
-   você pode sobrescrever especificamente para ele (embora você já tenha um min-height inline).
-   Uma altura fixa pode ser mais eficaz que min-height neste caso. */
 #vistorias2024Detalhes .chart-container canvas#vist2024_tipoCategoriaStackedBarChart {
-   /* Se o CSS acima não for suficiente SÓ para este, pode precisar de um seletor mais específico
-      para o *container* dele, mas geralmente a regra geral acima resolve para todos.
-      Exemplo de como seria para o container dele (assumindo que ele não tenha outra classe específica): */
-   /* A regra #vistorias2024Detalhes .chart-container já deve aplicar a altura de 350px.
-      Se precisar que SÓ este seja maior, você pode adicionar uma classe específica a ele
-      ou usar um seletor mais complexo se a estrutura permitir.
-      Mas vamos tentar primeiro com a regra geral. */
 }
 
 /* Você já tem a classe .chart-row, garanta que ela funcione bem com containers de altura fixa */
