@@ -334,8 +334,6 @@ const chartColors = {
 const colorPalette = Object.values(chartColors);
 let colorIndex = 0;
 // Adicione esta linha após as outras declarações de variáveis
-let includeCAT = true; // Estado inicial: não mostrar CAT
-let includeJatai = false; // Estado inicial: mostrar Jataí
 
 function getNextColor() {
   /* ... código original ... */
@@ -1067,7 +1065,6 @@ function calculateRankings(rankingType, initialYear, finalYear) {
     data.por_organizacao.flatMap(year => 
       year.dados
         .filter(item => {
-          // Incluir CAT se o toggle estiver ativado
           if (item.obm === "Total geral") return false;
           return true;
         })
@@ -1416,64 +1413,6 @@ document.addEventListener("DOMContentLoaded", function () {
   createLocationChart();
   createYearlyComparisonChart();
 
-// Adicione este código junto com os outros event listeners
-const catToggle = document.getElementById('includeCATToggle');
-if (catToggle) {
-  catToggle.addEventListener('change', function() {
-    includeCAT = this.checked;
-    
-    // Atualizar todos os gráficos relevantes
-    if (document.getElementById('rankingsAnalises').classList.contains('active')) {
-      // Atualizar Rankings
-      updateRankings();
-      
-      // Atualizar Contribuição
-      const contributionYear = parseInt(document.getElementById('contributionYear').value);
-      createOrUpdateContributionChart(contributionYear);
-      
-      // Atualizar Performance Relativa
-      const performanceYear = parseInt(document.getElementById('performanceYear').value);
-      const performanceView = document.getElementById('performanceView').value;
-      createOrUpdatePerformanceChart(performanceYear, performanceView);
-      
-      // Atualizar Quadrantes (se existir)
-      if (typeof createOrUpdateQuadrantesChart === 'function') {
-        const anoX = document.getElementById('quadranteAnoX').value;
-        const periodoY = document.getElementById('quadrantePeriodoY').value;
-        createOrUpdateQuadrantesChart(anoX, periodoY);
-      }
-    }
-  });
-}
-  // Adicione este código logo após o event listener do catToggle
-const jataiToggle = document.getElementById('includeJataiToggle');
-if (jataiToggle) {
-  jataiToggle.addEventListener('change', function() {
-    includeJatai = this.checked;
-    
-    // Atualizar todos os gráficos relevantes
-    if (document.getElementById('rankingsAnalises').classList.contains('active')) {
-      // Atualizar Rankings
-      updateRankings();
-      
-      // Atualizar Contribuição
-      const contributionYear = parseInt(document.getElementById('contributionYear').value);
-      createOrUpdateContributionChart(contributionYear);
-      
-      // Atualizar Performance Relativa
-      const performanceYear = parseInt(document.getElementById('performanceYear').value);
-      const performanceView = document.getElementById('performanceView').value;
-      createOrUpdatePerformanceChart(performanceYear, performanceView);
-      
-      // Atualizar Quadrantes (se existir)
-      if (typeof createOrUpdateQuadrantesChart === 'function') {
-        const anoX = document.getElementById('quadranteAnoX').value;
-        const periodoY = document.getElementById('quadrantePeriodoY').value;
-        createOrUpdateQuadrantesChart(anoX, periodoY);
-      }
-    }
-  });
-}
   // Configura e popula tabela da aba "Detalhamento OBM"
   const yearInitialSelect = document.getElementById("yearInitial");
   const yearFinalSelect = document.getElementById("yearFinal");
@@ -1550,7 +1489,6 @@ function calculateContributions(year) {
   // Filtrar e mapear os dados (excluindo o total geral e CAT que é duplicado)
   const filteredData = yearData.dados
     .filter(item => {
-      // Incluir CAT se o toggle estiver ativado
       if (item.obm === "Total geral") return false;
       return true;
     })
@@ -1757,7 +1695,6 @@ function calculatePerformanceData(year, viewMode) {
   // Filtrar e mapear os dados (excluindo o total geral e CAT)
     const filteredData = yearData.dados
     .filter(item => {
-      // Incluir CAT se o toggle estiver ativado
       if (item.obm === "Total geral") return false;
       return true;
     })
@@ -2096,7 +2033,6 @@ function updatePerformanceSummary(obmData, media, year) {
     data.por_organizacao.flatMap(year => 
       year.dados
         .filter(item => {
-          // Incluir CAT se o toggle estiver ativado
           if (item.obm === "Total geral") return false;
           return true;
         })
