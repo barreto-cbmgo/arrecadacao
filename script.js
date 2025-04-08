@@ -1094,9 +1094,7 @@ function criarGraficosTipoVistoriaTotal2024() {
                 }
             }
         }
-    });
-    vist2024TipoPieChartInstance.resize();
-  
+    });  
     // 5. Criar o Gráfico de Barras (Valores Absolutos)
     vist2024TipoBarChartInstance = new Chart(barCtx, {
         type: 'bar',
@@ -1152,9 +1150,164 @@ function criarGraficosTipoVistoriaTotal2024() {
             }
         }
     });
-  vist2024TipoBarChartInstance.resize();
 }
+/**
+ * Cria os gráficos (Pizza e Barras) para a distribuição da arrecadação
+ * total de vistorias em 2024 por categoria geográfica (Capital vs Interior).
+ */
+function criarGraficosCategoriaVistoria2024() {
+    // 1. Obter os elementos Canvas do HTML
+    const pieCanvas = document.getElementById('vist2024_categoriaDistribuicaoPieChart');
+    const barCanvas = document.getElementById('vist2024_categoriaComparacaoBarChart');
 
+    // Verifica se os elementos canvas existem no DOM atual
+    if (!pieCanvas || !barCanvas) {
+        // console.warn("Elementos canvas para 'Categoria Vistoria 2024' não encontrados.");
+        return; // Sai da função se os canvas não existirem
+    }
+
+    const pieCtx = pieCanvas.getContext('2d');
+    const barCtx = barCanvas.getContext('2d');
+
+    // 2. Preparar os Dados
+    // Vamos buscar os dados de 'data.por_secao' para 2024, que já estão agregados.
+    // Encontra o índice de 2024 (assumindo que está ordenado 2022, 2023, 2024)
+    const anoIndex2024 = data.por_secao.findIndex(item => item.ano === 2024);
+
+    if (anoIndex2024 === -1) {
+        console.error("Dados de 2024 não encontrados em data.por_secao.");
+        return; // Sai se não encontrar os dados
+    }
+
+    const dadosSecao2024 = data.por_secao[anoIndex2024];
+
+    const valorCapital = dadosSecao2024.goiania.vistoria; // Valor de vistorias em Goiânia (CAT)
+    const valorInterior = dadosSecao2024.interior.vistoria; // Valor de vistorias no Interior
+    const totalVistoriasCategoria = valorCapital + valorInterior; // Soma para cálculo de percentual
+
+    // Labels e Valores para os gráficos
+    const labels = ["Capital (CAT)", "Interior"];
+    const valores = [valorCapital, valorInterior];
+
+    // Define cores (pode escolher outras se preferir)
+    const backgroundColors = [
+        chartColors.purple, // Cor para Capital
+        chartColors.orange  // Cor para Interior
+    ];
+    const borderColors = backgroundColors.map(color => color.replace('0.7', '1')); // Cores sólidas para bordas
+
+    // 3. Destruir Gráficos Anteriores (se existirem)
+    if (vist2024CategoriaPieChartInstance) {
+        vist2024CategoriaPieChartInstance.destroy();
+        vist2024CategoriaPieChartInstance = null;
+    }
+    if (vist2024CategoriaBarChartInstance) {
+        vist2024CategoriaBarChartInstance.destroy();
+        vist2024CategoriaBarChartInstance = null;
+    }
+
+    // 4. Criar o Gráfico de Pizza (Proporção Capital vs Interior)
+    vist2024CategoriaPieChartInstance = new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: valores,
+                backgroundColor: backgroundColors,
+                borderColor: borderColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // Importante
+            plugins: {
+                title: {
+                    display: false // Título já no HTML
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const valor = context.raw;
+                            const percentage = ((valor / totalVistoriasCategoria) * 100).toFixed(2) + "%";
+                            return `${context.label}: ${formatCurrency(valor)} (${percentage})`;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15
+                    }
+                },
+                datalabels: {
+                    color: '#fff',
+                    font: { weight: 'bold', size: 12 },
+                    formatter: function(value, context) {
+                        const percentage = ((value / totalVistoriasCategoria) * 100);
+                        // Exibe se for maior que uma certa porcentagem
+                        return percentage > 5 ? percentage.toFixed(1) + "%" : '';
+                    }
+                }
+            }
+        }
+    });
+
+    // 5. Criar o Gráfico de Barras (Comparação Absoluta Capital vs Interior)
+    vist2024CategoriaBarChartInstance = new Chart(barCtx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Valor Arrecadado (R$)',
+                data: valores,
+                backgroundColor: backgroundColors,
+                borderColor: borderColors,
+                borderWidth: 1,
+                // Definir uma largura máxima para as barras se forem poucas
+                maxBarThickness: 150 // Ajuste conforme necessário
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // Importante
+            plugins: {
+                title: {
+                    display: false // Título já no HTML
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => `${ctx.dataset.label}: ${formatCurrency(ctx.raw)}`
+                    }
+                },
+                legend: {
+                    display: false // Desnecessário para uma barra por categoria
+                },
+                datalabels: {
+                    color: '#333',
+                    font: { weight: "bold" },
+                    formatter: function (value) {
+                        return formatCurrencyShort(value);
+                    },
+                    anchor: 'end',
+                    align: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: (val) => formatCurrencyShort(val)
+                    }
+                },
+                x: {
+                    // Pode adicionar um título ao eixo X se quiser
+                    // title: { display: true, text: 'Localização' }
+                }
+            }
+        }
+    });
+}
 // --- Fim Funções da Aba "Análise Vistorias 2024" ---
 // --- Controle das Abas (sem alterações na função) ---
 function openTab(evt, tabName) {
@@ -1202,9 +1355,7 @@ function openTab(evt, tabName) {
       setTimeout(() => {
           // Chama a função que você acabou de criar
           criarGraficosTipoVistoriaTotal2024();
-
-          // --- Futuramente, você adicionará chamadas para outras funções de gráfico desta aba aqui ---
-          // Ex: criarGraficosCategoriaVistoria2024();
+          criarGraficosCategoriaVistoria2024();
           // Ex: criarGraficoCruzadoVistoria2024();
           // Ex: preencherCardsVistorias2024(); // Para preencher os cards de resumo
       }, 50); // Pequeno delay para garantir que a aba está visível
@@ -1218,6 +1369,9 @@ let topOBMsChartInstance = null;
 let bottomOBMsChartInstance = null;
 let vist2024TipoPieChartInstance = null;
 let vist2024TipoBarChartInstance = null;
+let vist2024CategoriaPieChartInstance = null;
+let vist2024CategoriaBarChartInstance = null;
+
 
 
 // Função para calcular rankings baseados nos filtros
