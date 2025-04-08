@@ -1308,6 +1308,139 @@ function criarGraficosCategoriaVistoria2024() {
         }
     });
 }
+/**
+ * Cria o gráfico de barras empilhadas detalhando a arrecadação de vistorias em 2024
+ * por Tipo de Vistoria, segmentado por Localização (Capital vs Interior).
+ */
+function criarGraficoCruzadoVistoria2024() {
+    // 1. Obter o elemento Canvas do HTML
+    const canvas = document.getElementById('vist2024_tipoCategoriaStackedBarChart');
+
+    // Verifica se o canvas existe
+    if (!canvas) {
+        // console.warn("Elemento canvas para 'Gráfico Cruzado Vistoria 2024' não encontrado.");
+        return; // Sai da função se o canvas não existir
+    }
+    const ctx = canvas.getContext('2d');
+
+    // 2. Preparar os Dados a partir de 'dadosVistoriasDetalhadas2024'
+    const tiposVistoria = dadosVistoriasDetalhadas2024.tipos; // ["Licenciamento Facilitado", "Funcionamento", "Habite-se"]
+
+    // Dados para Capital (CAT) - um valor para cada tipo de vistoria
+    const dadosCapital = tiposVistoria.map(
+        tipo => dadosVistoriasDetalhadas2024.valores["TOTAL CAT"][tipo] || 0 // Garante 0 se não houver dado
+    );
+
+    // Dados para Interior - um valor para cada tipo de vistoria
+    const dadosInterior = tiposVistoria.map(
+        tipo => dadosVistoriasDetalhadas2024.valores["TOTAL INTERIOR"][tipo] || 0 // Garante 0 se não houver dado
+    );
+
+    // Define cores distintas para Capital e Interior
+    const corCapital = chartColors.navy;  // Ex: Azul escuro para Capital
+    const corInterior = chartColors.orange; // Ex: Laranja para Interior
+
+    // 3. Destruir Gráfico Anterior (se existir)
+    if (vist2024CruzadoChartInstance) {
+        vist2024CruzadoChartInstance.destroy();
+        vist2024CruzadoChartInstance = null; // Limpa a referência
+    }
+
+    // 4. Criar o Gráfico de Barras Empilhadas
+    vist2024CruzadoChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: tiposVistoria, // Rótulos do eixo X (Tipos de Vistoria)
+            datasets: [
+                {
+                    label: 'Capital (CAT)', // Rótulo para a primeira parte da pilha
+                    data: dadosCapital,
+                    backgroundColor: corCapital,
+                    borderColor: corCapital.replace('0.7','1'),
+                    borderWidth: 1
+                },
+                {
+                    label: 'Interior', // Rótulo para a segunda parte da pilha
+                    data: dadosInterior,
+                    backgroundColor: corInterior,
+                    borderColor: corInterior.replace('0.7','1'),
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // Crucial para evitar problemas de tamanho/deslizamento
+            plugins: {
+                title: {
+                    display: false // O título principal já está no HTML
+                    // text: 'Arrecadação por Tipo de Vistoria e Localização (2024)',
+                    // font: { size: 14, weight: 'bold' }
+                },
+                tooltip: {
+                    mode: 'index', // Mostra tooltip para todos os stacks na mesma barra
+                    intersect: false, // Facilita ativar o tooltip
+                    callbacks: {
+                        label: function(context) {
+                            // Mostra o nome da localização (Capital/Interior) e o valor daquele segmento
+                            return `${context.dataset.label}: ${formatCurrency(context.raw)}`;
+                        }
+                        // Poderia adicionar um footer para mostrar o total da barra, se desejado
+                        // footer: function(tooltipItems) {
+                        //     let sum = 0;
+                        //     tooltipItems.forEach(function(tooltipItem) {
+                        //         sum += tooltipItem.parsed.y;
+                        //     });
+                        //     return 'Total Barra: ' + formatCurrency(sum);
+                        // }
+                    }
+                },
+                legend: {
+                    position: 'bottom', // Legenda mostrando Capital e Interior
+                    labels: {
+                        padding: 15
+                    }
+                },
+                datalabels: { // Rótulos DENTRO das barras empilhadas
+                    color: '#fff', // Cor do texto (branco geralmente funciona bem dentro das cores)
+                    font: { weight: 'bold', size: 10 },
+                    formatter: function(value, context) {
+                        // Só exibe o valor se for significativo (evita poluir barras pequenas)
+                        // Ajuste o valor 100000 conforme necessário
+                        return value > 100000 ? formatCurrencyShort(value) : '';
+                    }
+                    // Atenção: Pode ficar poluído em barras menores. Testar visualmente.
+                    // Se ficar ruim, pode remover esta seção 'datalabels' ou ajustar o limite.
+                }
+            },
+            scales: {
+                x: {
+                    stacked: true, // Empilha as barras no eixo X
+                    title: {
+                        display: true,
+                        text: 'Tipo de Vistoria'
+                    }
+                },
+                y: {
+                    stacked: true, // Empilha os valores no eixo Y
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Arrecadação (R$)'
+                    },
+                    ticks: {
+                        callback: (val) => formatCurrencyShort(val) // Formata eixo Y
+                    }
+                }
+            }
+            // Interação (opcional, mas pode ser útil se tiver muitos dados)
+            // interaction: {
+            //   mode: 'index',
+            //   intersect: false,
+            // },
+        }
+    });
+}
 // --- Fim Funções da Aba "Análise Vistorias 2024" ---
 // --- Controle das Abas (sem alterações na função) ---
 function openTab(evt, tabName) {
@@ -1356,7 +1489,7 @@ function openTab(evt, tabName) {
           // Chama a função que você acabou de criar
           criarGraficosTipoVistoriaTotal2024();
           criarGraficosCategoriaVistoria2024();
-          // Ex: criarGraficoCruzadoVistoria2024();
+          criarGraficoCruzadoVistoria2024();
           // Ex: preencherCardsVistorias2024(); // Para preencher os cards de resumo
       }, 50); // Pequeno delay para garantir que a aba está visível
   }
@@ -1371,6 +1504,7 @@ let vist2024TipoPieChartInstance = null;
 let vist2024TipoBarChartInstance = null;
 let vist2024CategoriaPieChartInstance = null;
 let vist2024CategoriaBarChartInstance = null;
+let vist2024CruzadoChartInstance = null;
 
 
 
