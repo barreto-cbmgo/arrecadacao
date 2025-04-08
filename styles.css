@@ -626,23 +626,6 @@ button:hover {
   width: 100%;      /* Mantém a largura responsiva dentro do seu layout */
 }
 
-#vistorias2024Detalhes .chart-container canvas#vist2024_tipoCategoriaStackedBarChart {
-}
-
-/* Você já tem a classe .chart-row, garanta que ela funcione bem com containers de altura fixa */
-.chart-row {
-  display: flex;
-  flex-wrap: wrap; /* Permite que os gráficos quebrem linha se não couberem */
-  gap: 20px;       /* Espaçamento entre os gráficos */
-  margin-bottom: 20px;
-}
-
-/* Ajuste para os containers dentro da linha, se necessário */
-.chart-row .chart-container {
-  flex: 1 1 45%; /* Tenta fazer caber 2 por linha, ajustável */
-  min-width: 300px; /* Evita que fiquem muito espremidos */
-  /* A altura já está sendo definida pela regra mais específica acima */
-}
 /* Add responsiveness */
 @media (max-width: 768px) {
   .floating-controls {
