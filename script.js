@@ -1095,7 +1095,8 @@ function criarGraficosTipoVistoriaTotal2024() {
             }
         }
     });
-
+    vist2024TipoPieChartInstance.resize();
+  
     // 5. Criar o Gráfico de Barras (Valores Absolutos)
     vist2024TipoBarChartInstance = new Chart(barCtx, {
         type: 'bar',
@@ -1151,6 +1152,7 @@ function criarGraficosTipoVistoriaTotal2024() {
             }
         }
     });
+  vist2024TipoBarChartInstance.resize();
 }
 
 // --- Fim Funções da Aba "Análise Vistorias 2024" ---
