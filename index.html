@@ -34,6 +34,10 @@
         <button class="tab-button" onclick="openTab(event, 'rankingsAnalises')">
           Rankings e Análises
         </button>
+          <!-- NOVO BOTÃO ADICIONADO ABAIXO -->
+        <button class="tab-button" onclick="openTab(event, 'vistorias2024Detalhes')">
+        Análise Vistorias 2024
+        </button>
       </div>
 
       <!-- Conteúdo da Aba Visão Geral (MODIFICADO - Tabela removida) -->
@@ -322,7 +326,88 @@
           </div>
         </div>
       </div> <!-- Fim da Aba Rankings e Análises (TAG /DIV ADICIONADA AQUI) -->
+      <!-- ... (Conteúdo das outras abas permanece igual) ... -->
 
+      </div> <!-- Fim da Aba Rankings e Análises -->
+
+      <!-- Conteúdo da Nova Aba - Análise Detalhada Vistorias 2024 (NOVO) -->
+      <div id="vistorias2024Detalhes" class="tab-content">
+
+        <!-- Seção 1: Resumo Geral Vistorias 2024 -->
+        <div class="section">
+          <div class="section-title">Resumo da Arrecadação de Vistorias - 2024</div>
+          <div class="summary-cards">
+            <div class="card">
+              <div class="card-title">Arrecadação Total (Geral) 2024</div>
+              <div class="card-value" id="vist2024_totalGeral">R$ --,--</div> <!-- Placeholder -->
+              <div class="card-subtitle">Todos os serviços</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Arrecadação Total (Vistorias) 2024</div>
+              <div class="card-value" id="vist2024_totalVistorias">R$ --,--</div> <!-- Placeholder -->
+              <div class="card-subtitle">Apenas vistorias</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Participação Vistorias no Total</div>
+              <div class="card-value" id="vist2024_percentualVistorias">--%</div> <!-- Placeholder -->
+              <div class="card-subtitle">Vistorias / Geral</div>
+            </div>
+          </div>
+          <!-- Você pode adicionar um pequeno texto explicativo aqui se desejar -->
+          <p style="text-align: center; margin-top: 15px; color: #555;">
+            Valores detalhados referentes exclusivamente ao ano de 2024 para o serviço de Vistoria.
+          </p>
+        </div>
+
+        <!-- Seção 2: Distribuição por Tipo de Vistoria (TOTAL) -->
+        <div class="section">
+          <div class="section-title">Distribuição da Arrecadação por Tipo de Vistoria (Total 2024)</div>
+          <div class="chart-row">
+            <div class="chart-container">
+              <div class="sub-section-title">Proporção por Tipo</div>
+              <canvas id="vist2024_tipoDistribuicaoPieChart"></canvas> <!-- Placeholder Gráfico de Pizza -->
+            </div>
+            <div class="chart-container">
+              <div class="sub-section-title">Valores Absolutos por Tipo</div>
+              <canvas id="vist2024_tipoComparacaoBarChart"></canvas> <!-- Placeholder Gráfico de Barras -->
+            </div>
+          </div>
+          <p id="vist2024_tipoAnaliseTexto" style="text-align: center; margin-top: 15px; color: #555;">
+            <!-- Análise textual pode ser inserida aqui via JS -->
+          </p>
+        </div>
+
+        <!-- Seção 3: Distribuição por Categoria Geográfica (Capital vs Interior) -->
+        <div class="section">
+          <div class="section-title">Distribuição da Arrecadação por Localização (Capital vs Interior - 2024)</div>
+          <div class="chart-row">
+             <div class="chart-container">
+               <div class="sub-section-title">Proporção Capital vs Interior</div>
+               <canvas id="vist2024_categoriaDistribuicaoPieChart"></canvas> <!-- Placeholder Gráfico de Pizza -->
+             </div>
+             <div class="chart-container">
+               <div class="sub-section-title">Valores Absolutos Capital vs Interior</div>
+               <canvas id="vist2024_categoriaComparacaoBarChart"></canvas> <!-- Placeholder Gráfico de Barras -->
+             </div>
+          </div>
+           <p id="vist2024_categoriaAnaliseTexto" style="text-align: center; margin-top: 15px; color: #555;">
+            <!-- Análise textual pode ser inserida aqui via JS -->
+          </p>
+        </div>
+
+        <!-- Seção 4: Detalhamento Cruzado (Tipo vs Categoria) -->
+        <div class="section">
+          <div class="section-title">Detalhamento da Arrecadação por Tipo e Localização (2024)</div>
+          <div class="chart-container" style="min-height: 400px;"> <!-- Dar um pouco mais de altura para este gráfico -->
+             <canvas id="vist2024_tipoCategoriaStackedBarChart"></canvas> <!-- Placeholder Gráfico de Barras Empilhadas -->
+          </div>
+          <p id="vist2024_cruzamentoAnaliseTexto" style="text-align: center; margin-top: 15px; color: #555;">
+            <!-- Análise textual pode ser inserida aqui via JS -->
+          </p>
+        </div>
+
+      </div>
+      <!-- Fim da Aba Análise Detalhada Vistorias 2024 -->
     </div>
     <!-- Fim do div.dashboard -->
 
