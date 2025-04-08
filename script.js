@@ -995,7 +995,165 @@ function createOrUpdateOBMComparisonChart() {
     },
   });
 }
+// --- Funções da Aba "Análise Vistorias 2024" ---
 
+/**
+ * Cria os gráficos (Pizza e Barras) para a distribuição da arrecadação
+ * total de vistorias em 2024 por tipo (Licenciamento, Funcionamento, Habite-se).
+ */
+function criarGraficosTipoVistoriaTotal2024() {
+    // 1. Obter os elementos Canvas do HTML
+    const pieCanvas = document.getElementById('vist2024_tipoDistribuicaoPieChart');
+    const barCanvas = document.getElementById('vist2024_tipoComparacaoBarChart');
+
+    // Verifica se os elementos canvas existem no DOM atual
+    // (Importante, pois a aba pode não estar ativa quando a função é chamada inicialmente)
+    if (!pieCanvas || !barCanvas) {
+        // console.warn("Elementos canvas para 'Tipo Vistoria Total 2024' não encontrados.");
+        return; // Sai da função se os canvas não existirem
+    }
+
+    const pieCtx = pieCanvas.getContext('2d');
+    const barCtx = barCanvas.getContext('2d');
+
+    // 2. Preparar os Dados a partir de 'dadosVistoriasDetalhadas2024'
+    const labels = dadosVistoriasDetalhadas2024.tipos; // ["Licenciamento Facilitado", "Funcionamento", "Habite-se"]
+    const valores = labels.map(tipo => dadosVistoriasDetalhadas2024.valores.TOTAL[tipo]);
+    // Ex: [7026142.65, 16783892.45, 1731305.55]
+
+    // Calcula o total APENAS desses tipos de vistoria para o cálculo de percentual
+    const totalVistoriasTipo = valores.reduce((sum, val) => sum + val, 0);
+    // Este valor deve ser igual a dadosVistoriasDetalhadas2024.arrecadacaoTotalVistorias
+
+    // Define cores consistentes para os tipos
+    const backgroundColors = [
+        chartColors.blue,   // Cor para Licenciamento Facilitado
+        chartColors.green,  // Cor para Funcionamento
+        chartColors.yellow  // Cor para Habite-se
+    ];
+    const borderColors = backgroundColors.map(color => color.replace('0.7', '1')); // Cores sólidas para bordas
+
+    // 3. Destruir Gráficos Anteriores (se existirem)
+    // Isso evita que múltiplos gráficos sejam desenhados um sobre o outro se a aba for reaberta
+    // e também previne o erro de "deslizar para baixo" ao recriar em uma aba visível.
+    if (vist2024TipoPieChartInstance) {
+        vist2024TipoPieChartInstance.destroy();
+        vist2024TipoPieChartInstance = null; // Limpa a referência
+    }
+    if (vist2024TipoBarChartInstance) {
+        vist2024TipoBarChartInstance.destroy();
+        vist2024TipoBarChartInstance = null; // Limpa a referência
+    }
+
+    // 4. Criar o Gráfico de Pizza (Proporção)
+    vist2024TipoPieChartInstance = new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: valores,
+                backgroundColor: backgroundColors,
+                borderColor: borderColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // Importante para evitar problemas de tamanho
+            plugins: {
+                title: {
+                    display: true,
+                    // O título já está no HTML como sub-section-title, mas podemos adicionar se quiser
+                    // text: 'Proporção por Tipo de Vistoria (Total 2024)',
+                    // font: { size: 14, weight: 'bold' }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const valor = context.raw;
+                            // Calcula a porcentagem em relação ao total *destes* tipos
+                            const percentage = ((valor / totalVistoriasTipo) * 100).toFixed(2) + "%";
+                            return `${context.label}: ${formatCurrency(valor)} (${percentage})`;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'bottom', // Legenda abaixo do gráfico
+                    labels: {
+                        padding: 15 // Espaçamento da legenda
+                    }
+                },
+                datalabels: { // Configuração dos rótulos DENTRO das fatias
+                    color: '#fff', // Cor do texto
+                    font: { weight: 'bold', size: 12 },
+                    formatter: function(value, context) {
+                        const percentage = ((value / totalVistoriasTipo) * 100);
+                        // Só exibe o rótulo se a porcentagem for razoável (ex: > 5%) para não poluir
+                        return percentage > 5 ? percentage.toFixed(1) + "%" : '';
+                    }
+                }
+            }
+        }
+    });
+
+    // 5. Criar o Gráfico de Barras (Valores Absolutos)
+    vist2024TipoBarChartInstance = new Chart(barCtx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Valor Arrecadado (R$)', // Rótulo do dataset (útil para tooltip)
+                data: valores,
+                backgroundColor: backgroundColors, // Usa as mesmas cores da pizza
+                borderColor: borderColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // Importante
+            plugins: {
+                title: {
+                     display: false // O título já está no HTML
+                    // text: 'Valores Absolutos por Tipo de Vistoria (Total 2024)',
+                    // font: { size: 14, weight: 'bold' }
+                },
+                tooltip: { // Tooltip que aparece ao passar o mouse
+                    callbacks: {
+                        label: (ctx) => `${ctx.dataset.label}: ${formatCurrency(ctx.raw)}`
+                    }
+                },
+                legend: {
+                    display: false // Não precisa de legenda para um único dataset de barras
+                },
+                datalabels: { // Rótulos de dados em cima das barras
+                    color: '#333', // Cor do texto
+                    font: { weight: "bold" },
+                    formatter: function (value) {
+                        // Usa o formato curto para valores nas barras
+                        return formatCurrencyShort(value);
+                    },
+                    anchor: 'end', // Posição do rótulo (no final da barra)
+                    align: 'top'   // Alinhamento do rótulo (acima do final da barra)
+                }
+            },
+            scales: { // Configuração dos eixos
+                y: { // Eixo Y (Valores)
+                    beginAtZero: true, // Começa do zero
+                    ticks: {
+                        // Formata os ticks do eixo Y com valores curtos
+                        callback: (val) => formatCurrencyShort(val)
+                    }
+                },
+                x: { // Eixo X (Tipos de Vistoria)
+                    // Nenhuma configuração especial necessária aqui por enquanto
+                }
+            }
+        }
+    });
+}
+
+// --- Fim Funções da Aba "Análise Vistorias 2024" ---
 // --- Controle das Abas (sem alterações na função) ---
 function openTab(evt, tabName) {
   var i, tabcontent, tablinks;
@@ -1017,24 +1175,48 @@ function openTab(evt, tabName) {
     evt.currentTarget.classList.add("active");
   }
 
-  // Redimensiona o gráfico de comparação APENAS se essa aba for aberta
   if (tabName === "compararOBMs") {
     setTimeout(() => {
-      // Verifica se a instância existe ANTES de tentar redimensionar
       if (obmComparisonChartInstance) {
         obmComparisonChartInstance.resize();
       } else {
-        // Se não existe, tenta criar (caso seja a primeira vez que abre a aba)
         createOrUpdateOBMComparisonChart();
       }
-    }, 10); // Pequeno delay para garantir que a aba está visível
+    }, 50); // Pequeno delay
+  } else if (tabName === 'rankingsAnalises') {
+     setTimeout(() => {
+         updateRankings(); // Atualiza os gráficos de ranking/bottom
+         const contributionYear = parseInt(document.getElementById('contributionYear')?.value || 2024);
+         createOrUpdateContributionChart(contributionYear);
+         const performanceYear = parseInt(document.getElementById('performanceYear')?.value || 2024);
+         const performanceView = document.getElementById('performanceView')?.value || 'top20';
+         createOrUpdatePerformanceChart(performanceYear, performanceView);
+         // Adicionar chamada para quadrantes se/quando implementado
+     }, 50); // Delay
   }
+  // ADICIONE ESTE ELSE IF ABAIXO:
+  else if (tabName === 'vistorias2024Detalhes') {
+      // Chama a função para criar os gráficos desta aba específica
+      setTimeout(() => {
+          // Chama a função que você acabou de criar
+          criarGraficosTipoVistoriaTotal2024();
+
+          // --- Futuramente, você adicionará chamadas para outras funções de gráfico desta aba aqui ---
+          // Ex: criarGraficosCategoriaVistoria2024();
+          // Ex: criarGraficoCruzadoVistoria2024();
+          // Ex: preencherCardsVistorias2024(); // Para preencher os cards de resumo
+      }, 50); // Pequeno delay para garantir que a aba está visível
+  }
+
 }
 
 // --- Funções da Aba "Rankings e Análises" ---
 // Variáveis para armazenar as instâncias dos gráficos de rankings
 let topOBMsChartInstance = null;
 let bottomOBMsChartInstance = null;
+let vist2024TipoPieChartInstance = null;
+let vist2024TipoBarChartInstance = null;
+
 
 // Função para calcular rankings baseados nos filtros
 function calculateRankings(rankingType, initialYear, finalYear) {
