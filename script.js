@@ -249,8 +249,35 @@ const data = {
   ],
 };
 
-// Para usar no seu código:
-// console.log(data);
+// vistorias detalhadas
+const dadosVistoriasDetalhadas2024 = {
+  ano: 2024, // Adicionado o ano referente aos dados
+  arrecadacaoTotalGeral: 34252753.25, // Valor total arrecadado em 2024 (todos os serviços, extraído do HTML)
+  arrecadacaoTotalVistorias: 28015220.87, // Valor total arrecadado apenas com vistorias em 2024 (soma da coluna 'Vistorias' na linha 'TOTAL' dos dados brutos)
+  categorias: ["TOTAL CAT", "TOTAL INTERIOR", "TOTAL"], // Categorias geográficas/administrativas
+  tipos: ["Licenciamento Facilitado", "Funcionamento", "Habite-se"], // Tipos específicos de vistorias
+  valores: { // Detalhamento dos valores por categoria e tipo de vistoria
+    "TOTAL CAT": {
+      "Licenciamento Facilitado": 2546568.18,
+      "Funcionamento": 3937626.16,
+      "Habite-se": 665483.20
+    },
+    "TOTAL INTERIOR": {
+      "Licenciamento Facilitado": 4479574.47,
+      "Funcionamento": 12846266.29,
+      "Habite-se": 1065822.35
+    },
+    "TOTAL": { // Soma de CAT + INTERIOR para cada tipo
+      "Licenciamento Facilitado": 7026142.65,
+      "Funcionamento": 16783892.45,
+      "Habite-se": 1731305.55
+      // O valor 'arrecadacaoTotalVistorias' acima (28015220.87) é a soma destes três valores na linha TOTAL.
+    }
+  }
+};
+
+
+
 
 // Função para formatar valores em reais
 function formatCurrency(value) {
