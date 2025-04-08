@@ -617,7 +617,42 @@ button:hover {
 .floating-controls input[type="checkbox"] {
   margin-right: 8px;
 }
+/* styles.css */
 
+/* Adicione esta regra ao final do seu arquivo CSS */
+#vistorias2024Detalhes .chart-container {
+  position: relative; /* Boa prática para containers de gráficos */
+  height: 350px;     /* ALTURA FIXA - Ajuste este valor conforme necessário */
+  width: 100%;      /* Mantém a largura responsiva dentro do seu layout */
+}
+
+/* Opcional: Se o gráfico de barras empilhadas precisar de mais altura,
+   você pode sobrescrever especificamente para ele (embora você já tenha um min-height inline).
+   Uma altura fixa pode ser mais eficaz que min-height neste caso. */
+#vistorias2024Detalhes .chart-container canvas#vist2024_tipoCategoriaStackedBarChart {
+   /* Se o CSS acima não for suficiente SÓ para este, pode precisar de um seletor mais específico
+      para o *container* dele, mas geralmente a regra geral acima resolve para todos.
+      Exemplo de como seria para o container dele (assumindo que ele não tenha outra classe específica): */
+   /* A regra #vistorias2024Detalhes .chart-container já deve aplicar a altura de 350px.
+      Se precisar que SÓ este seja maior, você pode adicionar uma classe específica a ele
+      ou usar um seletor mais complexo se a estrutura permitir.
+      Mas vamos tentar primeiro com a regra geral. */
+}
+
+/* Você já tem a classe .chart-row, garanta que ela funcione bem com containers de altura fixa */
+.chart-row {
+  display: flex;
+  flex-wrap: wrap; /* Permite que os gráficos quebrem linha se não couberem */
+  gap: 20px;       /* Espaçamento entre os gráficos */
+  margin-bottom: 20px;
+}
+
+/* Ajuste para os containers dentro da linha, se necessário */
+.chart-row .chart-container {
+  flex: 1 1 45%; /* Tenta fazer caber 2 por linha, ajustável */
+  min-width: 300px; /* Evita que fiquem muito espremidos */
+  /* A altura já está sendo definida pela regra mais específica acima */
+}
 /* Add responsiveness */
 @media (max-width: 768px) {
   .floating-controls {
@@ -629,6 +664,7 @@ button:hover {
     padding: 10px;
   }
 }
+
 /* CONFIGURAÇÃO GRÁFICOS */
 /* Adicione estas regras ao seu styles.css */
 
