@@ -35,7 +35,6 @@ body {
 canvas {
   display: block;       /* Prevents extra space below canvas */
   max-width: 100%;    /* IMPORTANT: Scales canvas width down to fit container */
-  height: auto !important; /* IMPORTANT: Lets height adjust, overriding fixed inline styles */
 }
 .header {
   text-align: center;
