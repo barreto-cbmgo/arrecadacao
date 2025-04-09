@@ -10,7 +10,32 @@ body {
   max-width: 1600px;
   margin: 0 auto;
   padding: 20px; /* Espaçamento interno */
+}
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+/* Ensure chart containers are constrained and positioned correctly */
+.chart-container,
+.pie-chart, /* Add any other specific classes wrapping canvas elements if needed */
+.obm-comparison-chart-container, /* Already present */
+.rankings-chart, /* Already present */
+.contribution-chart-container, /* Already present */
+.performance-chart-container, /* Already present */
+.quadrantes-chart-container /* Already present */
+/* Add specific classes from tab 5 if they aren't covered by .chart-container */
+ {
+  position: relative; /* Needed for Chart.js positioning/tooltips */
+  max-width: 100%;   /* IMPORTANT: Prevents container from exceeding parent width */
+  overflow: hidden;    /* ADD/ENSURE THIS: Clips anything trying to draw outside */
 
+  /* Keep existing flex: 1 if inside .chart-row */
+  /* Be cautious with fixed min-height/height if maintainAspectRatio is true */
+}
+/* Ensure canvas itself scales within its container */
+canvas {
+  display: block;       /* Prevents extra space below canvas */
+  max-width: 100%;    /* IMPORTANT: Scales canvas width down to fit container */
+  height: auto !important; /* IMPORTANT: Lets height adjust, overriding fixed inline styles */
 }
 .header {
   text-align: center;
