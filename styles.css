@@ -10,8 +10,8 @@ body {
   max-width: 1600px;
   margin: 0 auto;
   padding: 20px; /* Espaçamento interno */
-}
 
+}
 .header {
   text-align: center;
   margin-bottom: 20px;
@@ -623,9 +623,6 @@ button:hover {
   margin-right: 8px;
 }
 /* styles.css */
-
-
-
 /* Add responsiveness */
 @media (max-width: 768px) {
   .floating-controls {
