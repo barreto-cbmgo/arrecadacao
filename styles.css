@@ -9,6 +9,8 @@ body {
 .dashboard {
   max-width: 1600px;
   margin: 0 auto;
+  padding: 20px; /* Espaçamento interno */
+
 }
 .header {
   text-align: center;
@@ -50,6 +52,9 @@ body {
 .tab-content {
   display: none; /* Esconde por padrão */
   animation: fadeIn 0.5s;
+    width: 100%;             /* Faz o conteúdo da aba ocupar toda a largura disponível no pai (.dashboard) */
+  box-sizing: border-box;  /* Garante que padding/border não causem overflow */
+
 }
 .tab-content.active {
   display: block; /* Mostra a aba ativa */
@@ -617,6 +622,9 @@ button:hover {
 .floating-controls input[type="checkbox"] {
   margin-right: 8px;
 }
+/* styles.css */
+
+
 
 /* Add responsiveness */
 @media (max-width: 768px) {
@@ -629,8 +637,10 @@ button:hover {
     padding: 10px;
   }
 }
-/* CONFIGURAÇÃO GRÁFICOS */
-/* Adicione estas regras ao seu styles.css */
+
+/* start */
+
+/* END */
 
 /* Garante que os contêineres principais dos gráficos não ultrapassem seus pais */
 .chart-container,
