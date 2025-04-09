@@ -11,9 +11,6 @@ body {
   margin: 0 auto;
   padding: 20px; /* Espaçamento interno */
 }
-*, *::before, *::after {
-  box-sizing: border-box;
-}
 
 .header {
   text-align: center;
