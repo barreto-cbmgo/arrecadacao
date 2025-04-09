@@ -11,7 +11,9 @@ body {
 *, *::before, *::after {
   box-sizing: border-box;
 }
-
+#performanceChart{
+  height auto !important!
+}
 .dashboard {
   max-width: 1600px;
   margin: 0 auto;
