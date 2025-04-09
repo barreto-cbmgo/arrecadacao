@@ -14,24 +14,6 @@ body {
 *, *::before, *::after {
   box-sizing: border-box;
 }
-/* Ensure chart containers are constrained and positioned correctly */
-.chart-container,
-.pie-chart, /* Add any other specific classes wrapping canvas elements if needed */
-.obm-comparison-chart-container, /* Already present */
-.rankings-chart, /* Already present */
-.contribution-chart-container, /* Already present */
-.performance-chart-container, /* Already present */
-.quadrantes-chart-container /* Already present */
-/* Add specific classes from tab 5 if they aren't covered by .chart-container */
- {
-  position: relative; /* Needed for Chart.js positioning/tooltips */
-  max-width: 100%;   /* IMPORTANT: Prevents container from exceeding parent width */
-  overflow: hidden;    /* ADD/ENSURE THIS: Clips anything trying to draw outside */
-
-  /* Keep existing flex: 1 if inside .chart-row */
-  /* Be cautious with fixed min-height/height if maintainAspectRatio is true */
-}
-/* Ensure canvas itself scales within its container */
 
 .header {
   text-align: center;
