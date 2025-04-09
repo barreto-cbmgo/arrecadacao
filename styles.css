@@ -213,16 +213,6 @@ body {
   flex-basis: auto;
 }
 
-.quadrantes-chart-container {
-  height: 800px;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  flex-grow: 0;
-  flex-shrink: 1;
-  flex-basis: auto;
-}
-
 .obm-comparison-chart-container {
   min-height: 450px;
 }
@@ -456,99 +446,6 @@ button:hover {
 }
 
 /* --- Quadrantes Specific Styles (Keep if used) --- */
-.quadrantes-explicacao {
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  padding: 15px 20px;
-  margin: 15px 0 25px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-.explicacao-texto {
-  margin-bottom: 15px;
-}
-
-.explicacao-texto p {
-  font-size: 15px;
-  line-height: 1.4;
-  color: #444;
-  margin: 0;
-  text-align: center;
-}
-
-.explicacao-quadrantes {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-}
-
-.explicacao-quadrante {
-  display: flex;
-  align-items: center;
-  padding: 8px 12px;
-  border-radius: 6px;
-  min-width: 200px;
-  background-color: white;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-
-.numero-quadrante {
-  font-weight: bold;
-  font-size: 16px;
-  margin-right: 8px;
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  line-height: 24px;
-  text-align: center;
-  border-radius: 50%;
-  color: white;
-}
-
-.q1 .numero-quadrante { background-color: #4bc0c0; }
-.q2 .numero-quadrante { background-color: #36a2eb; }
-.q3 .numero-quadrante { background-color: #ff6384; }
-.q4 .numero-quadrante { background-color: #ff9f40; }
-
-.nome-quadrante { font-weight: bold; margin-right: 8px; }
-.desc-quadrante { font-size: 13px; color: #666; }
-
-.quadrantes-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  margin-top: 15px;
-}
-
-.quadrantes-legenda {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 25px;
-  max-width: 1200px;
-  width: 100%;
-}
-
-.quadrante-item {
-  padding: 15px 20px;
-  border-radius: 8px;
-  width: calc(50% - 15px);
-  min-width: 250px;
-  max-width: 45%; /* Adjust max width */
-  text-align: center;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
-}
-
-.quadrante-titulo { font-weight: bold; font-size: 18px; margin-bottom: 6px; color: #333; }
-.quadrante-desc { font-size: 15px; color: #555; line-height: 1.4; }
-
-.q1 { background-color: rgba(75, 192, 192, 0.15); border-left: 4px solid #4bc0c0; }
-.q2 { background-color: rgba(54, 162, 235, 0.15); border-left: 4px solid #36a2eb; }
-.q3 { background-color: rgba(255, 99, 132, 0.15); border-left: 4px solid #ff6384; }
-.q4 { background-color: rgba(255, 159, 64, 0.15); border-left: 4px solid #ff9f40; }
 
 /* --- Floating Controls (Keep if used) --- */
 .floating-controls {
@@ -593,9 +490,6 @@ button:hover {
   .pie-chart {
       flex-basis: 45%; /* Allow 2 pie charts per row */
   }
-  .quadrante-item {
-      max-width: 46%;
-  }
 }
 
 /* Tablets */
@@ -606,13 +500,6 @@ button:hover {
         height: auto; /* Let height become auto based on width */
         min-height: 350px; /* Set a min-height */
     }
-     .quadrantes-chart-container {
-         height: 600px; /* Reduce height */
-     }
-     .quadrante-item {
-         width: 90%; /* Stack quadrant descriptions */
-         max-width: 90%;
-     }
 }
 
 /* Mobile Devices */
@@ -672,9 +559,6 @@ button:hover {
     right: 10px;
     padding: 10px;
   }
-   .quadrantes-chart-container {
-       height: 450px; /* Further reduce height */
-   }
 }
 
 /* Very Small Screens */
@@ -692,7 +576,4 @@ button:hover {
     .section {
         padding: 15px;
     }
-     .quadrantes-chart-container {
-         height: 400px;
-     }
 }
