@@ -624,12 +624,7 @@ button:hover {
 }
 /* styles.css */
 
-/* Adicione esta regra ao final do seu arquivo CSS */
-#vistorias2024Detalhes .chart-container {
-  position: relative; /* Boa prática para containers de gráficos */
-  height: 350px;     /* ALTURA FIXA - Ajuste este valor conforme necessário */
-  width: 100%;      /* Mantém a largura responsiva dentro do seu layout */
-}
+
 
 /* Add responsiveness */
 @media (max-width: 768px) {
