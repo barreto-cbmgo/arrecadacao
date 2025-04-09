@@ -32,10 +32,7 @@ body {
   /* Be cautious with fixed min-height/height if maintainAspectRatio is true */
 }
 /* Ensure canvas itself scales within its container */
-canvas {
-  display: block;       /* Prevents extra space below canvas */
-  max-width: 100%;    /* IMPORTANT: Scales canvas width down to fit container */
-}
+
 .header {
   text-align: center;
   margin-bottom: 20px;
