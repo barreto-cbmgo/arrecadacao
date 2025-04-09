@@ -1,4 +1,10 @@
-/* Estilos CSS permanecem os mesmos */
+/* styles.css */
+
+/* Ensure Box Sizing is applied globally */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
@@ -6,12 +12,13 @@ body {
   background-color: #f5f5f5;
   color: #252525;
 }
+
 .dashboard {
   max-width: 1600px;
   margin: 0 auto;
   padding: 20px; /* Espaçamento interno */
-
 }
+
 .header {
   text-align: center;
   margin-bottom: 20px;
@@ -20,15 +27,19 @@ body {
   padding: 15px;
   border-radius: 8px;
 }
+
 .header h1 {
   margin: 0;
 }
+
 /* --- Estilos das Abas --- */
 .tab-container {
   margin-bottom: 20px;
   border-bottom: 2px solid #164979;
   display: flex;
+  flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
 }
+
 .tab-button {
   padding: 10px 20px;
   cursor: pointer;
@@ -40,25 +51,30 @@ body {
   font-weight: 600;
   color: #333;
   margin-right: 5px;
+  margin-bottom: -1px; /* Prevent double border appearance when wrapped */
   transition: background-color 0.3s, color 0.3s;
 }
+
 .tab-button:hover {
   background-color: #d0d0d0;
 }
+
 .tab-button.active {
   background-color: #164979;
   color: white;
 }
+
 .tab-content {
   display: none; /* Esconde por padrão */
   animation: fadeIn 0.5s;
-    width: 100%;             /* Faz o conteúdo da aba ocupar toda a largura disponível no pai (.dashboard) */
-  box-sizing: border-box;  /* Garante que padding/border não causem overflow */
-
+  width: 100%;             /* Faz o conteúdo da aba ocupar toda a largura disponível no pai (.dashboard) */
+  /* box-sizing: border-box; -- Already handled globally */
 }
+
 .tab-content.active {
   display: block; /* Mostra a aba ativa */
 }
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -74,27 +90,33 @@ body {
   justify-content: space-between;
   margin-bottom: 20px;
   gap: 15px;
+  flex-wrap: wrap; /* Allow cards to wrap */
 }
+
 .card {
   background-color: white;
   border-radius: 8px;
   padding: 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   flex: 1;
+  min-width: 200px; /* Minimum width before wrapping */
   text-align: center;
 }
+
 .card-title {
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 15px;
   color: #666;
 }
+
 .card-value {
   font-size: 24px;
   font-weight: 700;
   color: #164979;
   margin-bottom: 5px;
 }
+
 .section {
   background-color: white;
   border-radius: 8px;
@@ -102,6 +124,7 @@ body {
   margin-bottom: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
 .section-title {
   font-size: 18px;
   font-weight: 600;
@@ -109,6 +132,7 @@ body {
   color: #333;
   text-align: center;
 }
+
 .sub-section-title {
   font-size: 16px;
   font-weight: 600;
@@ -116,30 +140,45 @@ body {
   color: #444;
   text-align: center;
 }
+
 .pie-container {
   display: flex;
   justify-content: space-between;
   gap: 15px;
+  flex-wrap: wrap; /* Allow pie charts to wrap */
 }
+
 .pie-chart {
   flex: 1;
+  min-width: 250px; /* Adjust as needed */
   height: 320px;
+  position: relative; /* Ensure canvas positioning works */
+  max-width: 100%;   /* Prevent overflow */
 }
+
 .table-container {
   max-height: 600px; /* Ajuste conforme necessário */
   overflow-y: auto;
   margin-top: 20px;
+  border: 1px solid #ddd; /* Add border for clarity when scrolling */
 }
+
 table {
   width: 100%;
   border-collapse: collapse;
 }
+
 th,
 td {
   padding: 8px 12px;
   text-align: left;
   border-bottom: 1px solid #ddd;
+  border-right: 1px solid #eee; /* Optional: vertical lines */
 }
+td:last-child, th:last-child {
+    border-right: none;
+}
+
 th {
   background-color: #164979;
   color: white;
@@ -147,50 +186,75 @@ th {
   top: 0;
   z-index: 1; /* Garante que o header fique sobre o conteúdo ao rolar */
 }
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Zebra striping */
+}
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
 .growth-positive {
   color: #28a745;
+  font-weight: bold;
 }
+
 .growth-negative {
   color: #dc3545;
+  font-weight: bold;
 }
-.bar-container {
-  height: 400px;
-  margin-bottom: 20px;
-}
+
+/* Removed .bar-container as it wasn't used in HTML */
+
 .chart-row {
   display: flex;
   gap: 20px;
   margin-bottom: 20px;
+  flex-wrap: wrap; /* Allow charts in a row to wrap */
 }
+
+/* --- UPDATED/ENSURED .chart-container --- */
 .chart-container {
-  flex: 1;
-  min-height: 350px;
-  position: relative;
+  flex: 1; /* Distribute space within .chart-row */
+  min-width: 280px; /* Minimum width before wrapping in a row */
+  min-height: 350px; /* YOUR CONSTANT HEIGHT RULE GOES HERE */
+  position: relative; /* ESSENTIAL for Chart.js positioning */
+  max-width: 100%;    /* Ensure container itself doesn't overflow parent */
+  overflow: hidden;   /* Hide potential minor rendering artifacts */
 }
 
 /* Configurações específicas para os gráficos de rankings */
 .rankings-charts-row {
   min-height: 450px;
-  height: 450px;
+  /* height: 450px; /* Avoid fixed height on row if possible */
 }
 
 .rankings-chart {
-  height: 450px;
-  max-height: 450px;
-  min-height: 450px;
-  overflow: hidden;
+  /* Inherits from .chart-container, but you can override height here if needed */
+  min-height: 450px; /* Example override */
+  /* Removed fixed height/max-height to rely on min-height + canvas fit */
+  /* overflow: hidden; -- Inherited from .chart-container */
 }
 
 /* Estilo para a seção de contribuição para o total */
+.contribuicao-container { /* New wrapper div */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
 .contribution-chart-container {
   height: 400px;
-  width: 700px;
+  /* width: 700px; /* Avoid fixed width, let max-width control */
   margin: 0 auto;
-  max-width: 100%;
+  max-width: 700px; /* Control max size */
+  width: 100%; /* Occupy available space up to max-width */
+  position: relative; /* Needed for canvas */
+  overflow: hidden;   /* Add overflow hidden */
 }
 
 .contribution-summary {
-  margin-top: 20px;
+  margin-top: 10px; /* Reduced margin */
   padding: 15px;
   background-color: #f8f8f8;
   border-radius: 6px;
@@ -198,6 +262,7 @@ th {
   font-size: 15px;
   line-height: 1.6;
   max-width: 700px;
+  width: 100%; /* Match container width */
   margin-left: auto;
   margin-right: auto;
 }
@@ -208,15 +273,24 @@ th {
 }
 
 /* Estilo para a seção de performance relativa à média */
+.performance-container { /* New wrapper div */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
 .performance-chart-container {
   height: 600px;
-  width: 900px;
+  /* width: 900px; /* Avoid fixed width */
   margin: 0 auto;
-  max-width: 100%;
+  max-width: 900px; /* Control max size */
+  width: 100%;
+  position: relative; /* Needed for canvas */
+  overflow: hidden;   /* Add overflow hidden */
 }
 
 .performance-summary {
-  margin-top: 20px;
+  margin-top: 10px; /* Reduced margin */
   padding: 15px;
   background-color: #f8f8f8;
   border-radius: 6px;
@@ -224,6 +298,7 @@ th {
   font-size: 15px;
   line-height: 1.6;
   max-width: 900px;
+  width: 100%; /* Match container width */
   margin-left: auto;
   margin-right: auto;
 }
@@ -279,21 +354,10 @@ th {
   color: white;
 }
 
-.q1 .numero-quadrante {
-  background-color: #4bc0c0;
-}
-
-.q2 .numero-quadrante {
-  background-color: #36a2eb;
-}
-
-.q3 .numero-quadrante {
-  background-color: #ff6384;
-}
-
-.q4 .numero-quadrante {
-  background-color: #ff9f40;
-}
+.q1 .numero-quadrante { background-color: #4bc0c0; }
+.q2 .numero-quadrante { background-color: #36a2eb; }
+.q3 .numero-quadrante { background-color: #ff6384; }
+.q4 .numero-quadrante { background-color: #ff9f40; }
 
 .nome-quadrante {
   font-weight: bold;
@@ -320,13 +384,14 @@ th {
   max-width: 1200px;
   position: relative;
   margin: 0 auto;
+  overflow: hidden; /* Add overflow hidden */
 }
 
 .quadrantes-legenda {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
+  gap: 15px; /* Adjusted gap */
   margin-top: 25px;
   max-width: 1200px;
   width: 100%;
@@ -335,9 +400,8 @@ th {
 .quadrante-item {
   padding: 15px 20px;
   border-radius: 8px;
-  width: calc(50% - 15px);
-  min-width: 250px;
-  max-width: 350px;
+  flex: 1 1 250px; /* Allow flexible wrapping, min width 250px */
+  max-width: 48%; /* Roughly two columns on larger screens */
   text-align: center;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
 }
@@ -355,31 +419,19 @@ th {
   line-height: 1.4;
 }
 
-.q1 {
-  background-color: rgba(75, 192, 192, 0.15);
-  border-left: 4px solid #4bc0c0;
-}
-
-.q2 {
-  background-color: rgba(54, 162, 235, 0.15);
-  border-left: 4px solid #36a2eb;
-}
-
-.q3 {
-  background-color: rgba(255, 99, 132, 0.15);
-  border-left: 4px solid #ff6384;
-}
-
-.q4 {
-  background-color: rgba(255, 159, 64, 0.15);
-  border-left: 4px solid #ff9f40;
-}
+.q1 { background-color: rgba(75, 192, 192, 0.15); border-left: 4px solid #4bc0c0; }
+.q2 { background-color: rgba(54, 162, 235, 0.15); border-left: 4px solid #36a2eb; }
+.q3 { background-color: rgba(255, 99, 132, 0.15); border-left: 4px solid #ff6384; }
+.q4 { background-color: rgba(255, 159, 64, 0.15); border-left: 4px solid #ff9f40; }
 
 /* Estilos para controles de zoom e navegação */
 .quadrantes-controls {
   display: flex;
   justify-content: center;
-  margin: 10px 0;
+  align-items: center; /* Center items vertically */
+  flex-wrap: wrap; /* Allow wrapping */
+  gap: 10px; /* Add gap */
+  margin: 15px 0; /* Adjusted margin */
 }
 
 .zoom-instructions {
@@ -410,6 +462,8 @@ th {
 
 .instruction-icon {
   font-size: 18px;
+  width: 20px; /* Give icon fixed width */
+  text-align: center;
 }
 
 .zoom-btn {
@@ -417,27 +471,37 @@ th {
   color: white;
   border: none;
   border-radius: 4px;
-  padding: 4px 10px;
+  padding: 6px 12px; /* Slightly larger */
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px; /* Slightly larger */
   transition: background-color 0.2s;
 }
 
 .zoom-btn:hover {
   background-color: #0d3457;
 }
+
 .filter-section {
   display: flex;
   gap: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 20px; /* Increased bottom margin */
   align-items: center;
   justify-content: center;
   flex-wrap: wrap; /* Adicionado para melhor responsividade */
+  padding: 10px; /* Add padding */
+  background-color: #f8f9fa; /* Light background */
+  border-radius: 6px;
 }
+
 .filter-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px; /* Reduced gap */
+}
+.filter-group label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
 }
 
 /* Estilos para tooltips de informação */
@@ -473,14 +537,14 @@ th {
   color: #fff;
   text-align: left;
   border-radius: 6px;
-  padding: 8px 10px;
+  padding: 8px 12px; /* Adjusted padding */
   position: absolute;
-  z-index: 1;
-  bottom: 125%;
+  z-index: 10; /* Ensure tooltip is above other elements */
+  bottom: 130%; /* Position above the icon */
   left: 50%;
   transform: translateX(-50%);
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.3s ease-in-out;
   font-size: 13px;
   line-height: 1.4;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -490,28 +554,30 @@ th {
 .tooltip-text::after {
   content: "";
   position: absolute;
-  top: 100%;
+  top: 100%; /* At the bottom of the tooltip */
   left: 50%;
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: #333 transparent transparent transparent;
+  border-color: #333 transparent transparent transparent; /* Pointing down */
 }
 
 .info-tooltip:hover .tooltip-text {
   visibility: visible;
   opacity: 1;
 }
+
 select {
-  padding: 8px;
+  padding: 8px 10px; /* Adjusted padding */
   border-radius: 4px;
-  border: 1px solid #ddd;
+  border: 1px solid #ccc; /* Slightly darker border */
   background-color: white;
+  font-size: 14px;
 }
-.location-chart {
-  height: 300px;
-}
-button {
+
+/* Removed .location-chart as it wasn't used in HTML */
+
+button { /* General button style - affects filters etc. */
   background-color: #164979;
   color: white;
   border: none;
@@ -519,16 +585,22 @@ button {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
+  font-size: 14px;
 }
+
 button:hover {
   background-color: #0d3457;
 }
+
 .table-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
+
 /* --- Estilos da Aba de Comparação OBM --- */
 .obm-comparison-controls {
   display: flex;
@@ -536,13 +608,25 @@ button:hover {
   gap: 15px;
   margin-bottom: 20px;
   flex-wrap: wrap; /* Permite que os itens quebrem linha */
+  padding: 10px; /* Add padding */
+  background-color: #f8f9fa; /* Light background */
+  border-radius: 6px;
+}
+.obm-comparison-controls label {
+    font-weight: 600;
+    margin-right: 5px;
 }
 #obmAddDropdown {
   min-width: 250px; /* Largura mínima para o dropdown */
+  flex-grow: 1; /* Allow dropdown to grow */
+  max-width: 400px;
 }
+
 #selectedOBMListContainer {
-  margin-top: 15px; /* Adiciona espaço acima */
+  margin-bottom: 15px; /* Space below selected list */
+  margin-top: 0; /* Remove top margin if controls have padding */
 }
+
 #selectedOBMList {
   display: flex;
   flex-wrap: wrap;
@@ -552,8 +636,9 @@ button:hover {
   border: 1px solid #eee;
   background-color: #f9f9f9;
   border-radius: 4px;
-  min-height: 30px; /* Altura mínima para visualização */
+  min-height: 40px; /* Adjusted min-height */
 }
+
 .selected-obm-item {
   background-color: #e0e0e0;
   padding: 5px 10px;
@@ -561,48 +646,60 @@ button:hover {
   font-size: 14px;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px; /* Increased gap */
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
+
 .remove-obm-btn {
   background-color: #aaa;
   color: white;
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  width: 18px;
-  height: 18px;
-  font-size: 12px;
-  line-height: 16px; /* Ajuste para centralizar o 'x' */
+  width: 20px; /* Slightly larger */
+  height: 20px; /* Slightly larger */
+  font-size: 13px; /* Slightly larger */
+  line-height: 18px; /* Adjust line height */
   text-align: center;
   padding: 0;
   font-weight: bold;
+  transition: background-color 0.2s;
 }
+
 .remove-obm-btn:hover {
-  background-color: #888;
+  background-color: #dc3545; /* Red on hover */
 }
+
 .obm-comparison-chart-container {
   min-height: 450px; /* Altura mínima para o gráfico de comparação */
+  position: relative; /* Add relative positioning */
+  max-width: 100%;
+  overflow: hidden; /* Add overflow hidden */
 }
+
 /* Floating Controls Styles */
 .floating-controls {
   position: fixed;
   top: 120px;
   right: 20px;
   z-index: 1000;
-  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent */
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Stronger shadow */
   padding: 15px;
   display: flex;
   flex-direction: column;
   gap: 10px;
   border-left: 4px solid #164979;
   max-width: 250px;
-  transition: opacity 0.3s;
+  transition: opacity 0.3s, transform 0.3s;
+  opacity: 0.85; /* Slightly transparent when not hovered */
+  transform: translateX(10px); /* Start slightly off-screen */
 }
 
 .floating-controls:hover {
   opacity: 1;
+  transform: translateX(0); /* Slide in on hover */
 }
 
 .floating-controls label {
@@ -616,77 +713,150 @@ button:hover {
 }
 
 .floating-controls label:hover {
-  background-color: #f2f5f8;
+  background-color: #e9ecef; /* Lighter hover */
 }
 
 .floating-controls input[type="checkbox"] {
   margin-right: 8px;
-}
-/* styles.css */
-/* Add responsiveness */
-@media (max-width: 768px) {
-  .floating-controls {
-    position: fixed;
-    bottom: 20px;
-    top: auto;
-    right: 20px;
-    flex-direction: column;
-    padding: 10px;
-  }
+  accent-color: #164979; /* Style checkbox color */
 }
 
-/* start */
-
-/* END */
-
-/* Garante que os contêineres principais dos gráficos não ultrapassem seus pais */
-.chart-container,
-.pie-chart,
-.rankings-chart, /* Inclua containers específicos */
-.contribution-chart-container,
-.performance-chart-container,
-.quadrantes-chart-container,
-.obm-comparison-chart-container {
-  max-width: 100%; /* Impede que sejam mais largos que o pai */
-  position: relative; /* Mantém a posição relativa para Chart.js funcionar */
-  overflow: hidden; /* Opcional: esconde qualquer transbordamento mínimo, mas o ideal é evitar */
-}
-
-/* Estilos diretos para o elemento canvas */
+/* === NEW Chart Fitting Fix Rules === */
+/* Canvas styles - apply globally to all charts */
 canvas {
-  display: block; /* Remove espaços extras abaixo do canvas */
-  max-width: 100%; /* Garante que o canvas não seja maior que seu contêiner */
-  height: auto !important; /* Permite que a altura se ajuste baseada na largura mantida pelo Chart.js, override de altura fixa se necessário */
+  display: block;         /* Remove extra space below canvas */
+  max-width: 100%;      /* CRUCIAL: Force canvas width to fit container */
+  height: auto !important; /* IMPORTANT: Override Chart.js height, let container rule */
+  background-color: #fff; /* Optional: Ensures canvas background if container is transparent */
+}
+/* === End Chart Fitting Fix === */
+
+
+/* --- Responsive Design --- */
+@media (max-width: 1200px) {
+    .quadrante-item {
+        max-width: 48%; /* Ensure two columns fit comfortably */
+    }
 }
 
-/* Adiciona box-sizing para facilitar o controle de tamanho */
-*, *::before, *::after {
-  box-sizing: border-box;
+@media (max-width: 992px) {
+    .dashboard {
+        padding: 15px;
+    }
+    .chart-row, .pie-container {
+        flex-direction: column; /* Stack charts vertically */
+        gap: 25px; /* Increase gap when stacked */
+    }
+    .chart-container, .pie-chart {
+        width: 100%; /* Take full width when stacked */
+        min-width: unset; /* Remove min-width constraints */
+    }
+    .performance-chart-container, .contribution-chart-container {
+        /* Adjust height for smaller screens if needed */
+        height: 500px;
+    }
+     .quadrantes-chart-container {
+        height: 650px; /* Adjust height */
+    }
 }
-/* Versão responsiva */
+
+
 @media (max-width: 768px) {
-  .filter-group + .filter-group {
-    margin-left: 0;
-    margin-top: 8px;
+  body {
+    padding: 10px; /* Reduce body padding */
   }
-}/* --- Fim Estilos Comparação OBM --- */
-@media (max-width: 768px) {
-  .summary-cards,
-  .pie-container,
-  .chart-row {
-    flex-direction: column;
+  .dashboard {
+    padding: 10px; /* Reduce dashboard padding */
   }
-  .card,
-  .pie-chart,
-  .chart-container {
-    width: 100%;
+  .header h1 {
+    font-size: 20px; /* Adjust header size */
+  }
+  .header p {
+    font-size: 14px;
+  }
+  .tab-button {
+    padding: 8px 12px; /* Smaller tab buttons */
+    font-size: 14px;
+  }
+  .summary-cards {
+    flex-direction: column; /* Stack cards */
+    gap: 10px;
+  }
+  .card {
+      min-width: unset; /* Remove min-width */
   }
   .filter-section,
-  .obm-comparison-controls {
+  .obm-comparison-controls,
+  .table-header {
     flex-direction: column;
-    align-items: flex-start; /* Alinha itens à esquerda na coluna */
+    align-items: stretch; /* Stretch items like dropdowns */
+    gap: 10px;
   }
   #obmAddDropdown {
     width: 100%; /* Ocupa toda a largura em telas pequenas */
+    min-width: unset;
   }
+  .table-container {
+      max-height: 400px; /* Reduce max height for tables */
+  }
+  th, td {
+      padding: 6px 8px; /* Smaller table cell padding */
+      font-size: 13px;
+  }
+  .floating-controls {
+    position: fixed; /* Keep fixed */
+    bottom: 10px; /* Adjust position */
+    top: auto;
+    right: 10px; /* Adjust position */
+    left: 10px; /* Span across bottom */
+    max-width: none; /* Remove max width */
+    width: auto; /* Auto width based on content */
+    flex-direction: row; /* Horizontal layout */
+    flex-wrap: wrap; /* Allow controls to wrap */
+    justify-content: center; /* Center controls */
+    padding: 8px;
+    border-left: none; /* Remove side border */
+    border-top: 3px solid #164979; /* Add top border */
+    transform: none; /* Remove transform */
+    opacity: 1; /* Always visible */
+  }
+  .floating-controls label {
+      font-size: 13px;
+      padding: 6px;
+  }
+  .quadrante-item {
+      flex-basis: 100%; /* Stack legenda items */
+      max-width: 100%;
+  }
+   .quadrantes-chart-container {
+        height: 500px; /* Further adjust height */
+    }
+    .performance-chart-container {
+        height: 450px;
+    }
+    .contribution-chart-container {
+        height: 350px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 18px;
+    }
+    .card-value {
+        font-size: 20px;
+    }
+    .section-title {
+        font-size: 16px;
+    }
+    .sub-section-title {
+        font-size: 14px;
+    }
+    button, select {
+        font-size: 13px; /* Smaller buttons/selects */
+        padding: 6px 10px;
+    }
+    .filter-group label {
+        font-size: 13px;
+    }
 }
