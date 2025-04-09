@@ -12,7 +12,7 @@ body {
   box-sizing: border-box;
 }
 #performanceChart{
-  height auto !important!
+  height: auto !important;
 }
 .dashboard {
   max-width: 1600px;
