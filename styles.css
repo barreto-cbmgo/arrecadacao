@@ -231,7 +231,7 @@ body {
 canvas {
   display: block;           /* Removes extra space below */
   max-width: 100%;        /* MOST IMPORTANT: Never wider than the container */
-  height: auto !important;  /* Let Chart.js determine height based on aspect ratio and container size. !important overrides potential inline styles. */
+  height: 350px !important;  /* Let Chart.js determine height based on aspect ratio and container size. !important overrides potential inline styles. */
 }
 
 /* --- Table Styles --- */
